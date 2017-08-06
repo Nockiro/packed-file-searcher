@@ -25,6 +25,13 @@ namespace ZipFileSearcher.Searchers
         bool extractFile(SearchResultInstance s);
 
         /// <summary>
+        /// Used for setting the path if needed
+        /// </summary>
+        /// <param name="path">Path to file</param>
+        /// <returns>This</returns>
+        ISearcher WithPath(string path);
+
+        /// <summary>
         /// Text to be shown on "file choose.." dialog
         /// </summary>
         string ExtensionText { get; }

@@ -16,7 +16,7 @@ namespace ZipFileSearcher.Searchers
         {
             get
             {
-                return EnumUtil.GetValues<SearcherType>().Select(t => GetSearcher(t).ExtensionText).Aggregate((i, j) => i + "|" + j);
+                return Utils.GetValues<SearcherType>().Select(t => GetSearcher(t).ExtensionText).Aggregate((i, j) => i + "|" + j);
             }
         }
 

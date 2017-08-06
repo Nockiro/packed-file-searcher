@@ -251,8 +251,11 @@ namespace ZipFileSearcher
             this.tsm_searchText.Name = "tsm_searchText";
             this.tsm_searchText.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
             this.tsm_searchText.Size = new System.Drawing.Size(500, 25);
-            this.tsm_searchText.Text = "Search for..";
+            this.tsm_searchText.Text = "Search for.. (Use * and ?)";
+            this.tsm_searchText.Enter += new System.EventHandler(this.tsm_searchText_Enter);
+            this.tsm_searchText.Leave += new System.EventHandler(this.tsm_searchText_Leave);
             this.tsm_searchText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tsm_searchText_KeyDown);
+            this.tsm_searchText.Click += new System.EventHandler(this.tsm_searchText_Click);
             // 
             // chFile
             // 
