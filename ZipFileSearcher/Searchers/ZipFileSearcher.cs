@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.IO.Compression;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace ZipFileSearcher.Searchers
 {
@@ -28,10 +26,14 @@ namespace ZipFileSearcher.Searchers
         {
             List<SearchResultInstance> MatchingEntries = new List<SearchResultInstance>();
 
-                using (ZipArchive zip = ZipFile.Open(Path, ZipArchiveMode.Read))
-                    foreach (ZipArchiveEntry entry in zip.Entries)
-                        if (Regex.IsMatch(entry.FullName, Utils.WildCardToRegular(pattern)))
-                            MatchingEntries.Add(new SearchResultInstance(Path, entry.FullName, entry.Name));
+            using (ZipArchive zip = ZipFile.Open(Path, ZipArchiveMode.Read))
+
+                foreach (ZipArchiveEntry entry in zip.GetRawEntries())
+                {
+
+                    if (Regex.IsMatch(entry.Name, Utils.WildCardToRegular(pattern)))
+                        MatchingEntries.Add(new SearchResultInstance(Path, entry.FullName, entry.Name));
+                }
 
 
             return MatchingEntries;

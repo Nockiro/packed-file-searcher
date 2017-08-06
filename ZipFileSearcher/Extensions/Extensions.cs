@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
+using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 
-public static class Utils
+namespace ZipFileSearcher
 {
-    public static IEnumerable<T> GetValues<T>()
+    public static class Extensions
     {
-        return Enum.GetValues(typeof(T)).Cast<T>();
-    }
-
-    // If you want to implement both "*" and "?"
-    public static String WildCardToRegular(String value)
-    {
-        return "^" + Regex.Escape(value).Replace("\\?", ".").Replace("\\*", ".*") + "$";
+        public static string removeInvalidPathChars(this string str)
+        {
+            string sanitizedFileNameChars = Path.GetInvalidFileNameChars().Aggregate(str, (current, c) => current.Replace(c.ToString(), string.Empty));
+            return Path.GetInvalidPathChars().Aggregate(str, (current, c) => current.Replace(c.ToString(), string.Empty));
+        }
     }
 }
