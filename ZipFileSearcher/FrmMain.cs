@@ -16,14 +16,52 @@ namespace ZipFileSearcher
 {
     public partial class FrmMain : Form
     {
+        enum WorkingState
+        {
+            None,
+            DirectorySearch,
+            FileScan,
+            StringSearch
+        }
+
         public const string SearchHint = "Search for.. (Use * and ?)";
+        public const string DefaultStatusText = "Ready.";
+
+        private WorkingState CurrentWorkingState = WorkingState.None;
+
         public FrmMain()
         {
             InitializeComponent();
             lv_files.Items.Clear();
+
+            // Redirect console Output
+            Program.consoleWriter.WriteEvent += consoleWriter_WriteEvent;
+            Program.consoleWriter.WriteLineEvent += consoleWriter_WriteLineEvent;
+
+            // Hide results tab page
+            tabControl.TabPages.Remove(tb_results);
         }
 
+        private void consoleWriter_WriteLineEvent(object sender, ConsoleWriterEventArgs e)
+        {
+            this.InvokeIfRequired(() => tb_log.Text += Environment.NewLine + e.Value);
+        }
+
+        private void consoleWriter_WriteEvent(object sender, ConsoleWriterEventArgs e)
+        {
+            this.InvokeIfRequired(() => tb_log.Text += e.Value);
+        }
+
+
         #region helpers
+
+        protected void setStatus(string text, Boolean progress = false, Boolean marquee = false, int percent = 0)
+        {
+            lbl_status.Text = text;
+            pb_status.Visible = progress;
+            pb_status.Style = marquee ? ProgressBarStyle.Marquee : ProgressBarStyle.Continuous;
+            pb_status.Value = percent;
+        }
 
         private ListViewItem processFilePath(string filePath)
         {
@@ -47,22 +85,12 @@ namespace ZipFileSearcher
         private void btn_search_Click(object sender, EventArgs e)
         {
             tsm_searchText.Enabled = false;
-            List<SearchResultInstance> sri = new List<SearchResultInstance>();
+            btn_abort.Visible = true;
+            CurrentWorkingState = WorkingState.StringSearch;
 
-            foreach (ListViewItem lvi in lv_files.Items)
-                sri.AddRange(((ISearcher)lvi.Tag).Search(tsm_searchText.Text));
-
-            foreach (SearchResultInstance inst in sri)
-            {
-                ListViewItem item = new ListViewItem(inst.PackagePath);
-                item.SubItems.Add(inst.FileName);
-                item.SubItems.Add(inst.FolderPath);
-                item.Tag = inst;
-
-                lv_results.Items.Add(item);
-            }
-
-            tsm_searchText.Enabled = true;
+            bw_search.RunWorkerAsync(lv_files.Items.Cast<ListViewItem>()
+                                 .Select(item => item.Tag)
+                                 .ToList());
         }
 
 
@@ -79,11 +107,14 @@ namespace ZipFileSearcher
 
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
+                    setStatus("Read files.. ", true, true);
                     foreach (var f in ofd.FileNames)
                     {
+                        setStatus("Read files.. " + f, true, true);
                         // Process file path into a new listviewitem and add it
                         lv_files.Items.Add(processFilePath(f));
                     }
+                    setStatus(DefaultStatusText);
                 }
             }
         }
@@ -93,31 +124,48 @@ namespace ZipFileSearcher
             VistaFolderBrowserDialog fdb = new VistaFolderBrowserDialog();
             fdb.Multiselect = true;
 
-            if (fdb.ShowDialog(this)) 
+            if (fdb.ShowDialog(this))
             {
-                foreach (var path in fdb.SelectedPaths)
-                {
-                    if (!Directory.Exists(path))
-                        continue;
-
-                    (Boolean errorOccured, List<string> results) search = Utils.SearchDirectory(path);
-                    string[] files = search.results.ToArray();
-
-                    // Loop through each file ..
-                    foreach (string file in files)
-                    {
-                        // .. if we have a searcher for the file, we process it - otherwise, we don't
-                        if (SearcherTypeHelper.ExtensionToSearcherType(Path.GetExtension(file)) != SearcherType.None)
-                            lv_files.Items.Add(processFilePath(file));
-                    }
-
-                    if (search.errorOccured)
-                        MessageBox.Show("Warning! One or multiple folders couldn't be checked since they weren't accessible.", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
+                btn_abort.Visible = true;
+                bw_loadFiles.RunWorkerAsync(fdb);
             }
         }
 
+        private void btn_removeFiles_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem lvi in lv_files.SelectedItems)
+                lv_files.Items.Remove(lvi);
+        }
 
+
+        int requestedTimesOfCancellation = 0;
+        private void btn_abort_Click(object sender, EventArgs e)
+        {
+            if (CurrentWorkingState == WorkingState.DirectorySearch)
+                Utils.CancellationOfSearchPending = true;
+            else if (CurrentWorkingState == WorkingState.FileScan)
+                bw_loadFiles.CancelAsync();
+            else if (CurrentWorkingState == WorkingState.StringSearch)
+                bw_search.CancelAsync();
+
+            requestedTimesOfCancellation++;
+            this.InvokeIfRequired(() => setStatus("Requested cancellation, please wait..", true, true));
+
+            if (requestedTimesOfCancellation == 10 && bw_loadFiles.IsBusy)
+                if (MessageBox.Show("U really wanna do dis the hard way?", "Sure?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    if (CurrentWorkingState == WorkingState.StringSearch)
+                    {
+                        bw_search.Abort();
+                        bw_search.Dispose();
+                    }
+                    else
+                    {
+                        bw_loadFiles.Abort();
+                        bw_loadFiles.Dispose();
+                    }
+                }
+        }
         #endregion
 
 
@@ -149,5 +197,101 @@ namespace ZipFileSearcher
             }
         }
         #endregion
+
+        private void bw_loadFiles_DoWork(object sender, DoWorkEventArgs e)
+        {
+            // initialize error flag
+            Boolean errorOccured = false;
+
+            foreach (var path in ((VistaFolderBrowserDialog)e.Argument).SelectedPaths)
+            {
+                if (!Directory.Exists(path))
+                    continue;
+
+                CurrentWorkingState = WorkingState.DirectorySearch;
+                this.InvokeIfRequired(() => setStatus($"Listing files in directories.. { path }", true, true));
+
+                (Boolean errorOccured, List<string> results) search = Utils.SearchDirectory(path);
+                string[] files = search.results.ToArray();
+
+                CurrentWorkingState = WorkingState.FileScan;
+                this.InvokeIfRequired(() => setStatus("Read files in directories.. ", true, true));
+                // Loop through each file ..
+                foreach (string file in files)
+                {
+                    // if we have a cancellation request, we grant it
+                    if (bw_loadFiles.CancellationPending)
+                    {
+                        e.Cancel = true;
+                        return;
+                    }
+
+                    // .. if we have a searcher for the file, we process it - otherwise, we don't
+                    if (SearcherTypeHelper.ExtensionToSearcherType(Path.GetExtension(file)) != SearcherType.None)
+                    {
+                        this.InvokeIfRequired(() => setStatus($"Read files in directories.. Valid: { file }", true, true));
+                        this.InvokeIfRequired(() => lv_files.Items.Add(processFilePath(file)));
+                    }
+                }
+                errorOccured = search.errorOccured || errorOccured;
+            }
+
+            if (errorOccured)
+                this.InvokeIfRequired(() => MessageBox.Show("Warning! One or multiple folders couldn't be checked since they weren't accessible.", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning));
+        }
+
+        private void bw_loadFiles_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            setStatus(DefaultStatusText);
+            btn_abort.Visible = false;
+            CurrentWorkingState = WorkingState.None;
+            requestedTimesOfCancellation = 0;
+        }
+
+
+        private void bw_search_DoWork(object sender, DoWorkEventArgs e)
+        {
+            List<SearchResultInstance> sri = new List<SearchResultInstance>();
+
+
+            foreach (ISearcher searcher in (List<object>)e.Argument)
+            {
+                this.InvokeIfRequired(() => setStatus($"Search for {tsm_searchText.Text} in {searcher.Path}.. ", true, true));
+                sri.AddRange(searcher.Search(tsm_searchText.Text));
+
+                if (bw_search.CancellationPending)
+                {
+                    break;
+                    e.Cancel = true;
+                }
+            }
+            e.Result = sri;
+        }
+
+        private void bw_search_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            // Show results tab page if not existing yet
+            if (!tabControl.TabPages.Contains(tb_results))
+                tabControl.TabPages.Add(tb_results);
+
+            foreach (SearchResultInstance inst in e.Result as List<SearchResultInstance>)
+            {
+                if (bw_search.CancellationPending && e.Cancelled)
+                    if (MessageBox.Show("Do you also want to cancel the listing of the so far found results?", "Sure?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        break;
+
+                ListViewItem item = new ListViewItem(inst.PackagePath);
+                item.SubItems.Add(inst.FileName);
+                item.SubItems.Add(inst.FolderPath);
+                item.Tag = inst;
+
+                lv_results.Items.Add(item);
+            }
+
+            setStatus(DefaultStatusText);
+            btn_abort.Visible = false;
+            requestedTimesOfCancellation = 0;
+            tsm_searchText.Enabled = true;
+        }
     }
 }

@@ -8,15 +8,21 @@ namespace ZipFileSearcher
 {
     static class Program
     {
+        public static ConsoleWriter consoleWriter;
+
         /// <summary>
         /// Der Haupteinstiegspunkt für die Anwendung.
         /// </summary>
         [STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FrmMain());
+            using (consoleWriter = new ConsoleWriter())
+            {
+                Console.SetOut(consoleWriter);
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                Application.Run(new FrmMain());
+            }
         }
     }
 }

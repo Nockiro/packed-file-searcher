@@ -55,6 +55,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\SearcherType.cs" />
+    <Compile Include="Extensions\AbortableBackgroundWorker.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Extensions\ConsoleWriter.cs" />
     <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="Extensions\Utils.cs" />
     <Compile Include="Extensions\VistaFolderBrowserDialog.cs" />

@@ -17,19 +17,28 @@ public static class Utils
         return "^" + Regex.Escape(value).Replace("\\?", ".").Replace("\\*", ".*") + "$";
     }
 
-    public static (Boolean errorOccured, List<string> results) SearchDirectory(string sDir, Boolean errorOccured = false)
+    // if a thread or background worker requests a cancellation, it's important for the user experience to softly cancel it..
+    // Yes, it's no clean programming, but it does the work
+    public static Boolean CancellationOfSearchPending = false;
+    public static (Boolean errorOccured, List<string> results) SearchDirectory(string sDir, Boolean errorOccured = false, Boolean ListenToCancelRequest = true)
     {
         Boolean ErrorOccured = errorOccured;
         List<string> files = new List<string>();
 
         try
         {
-            foreach (string f in Directory.GetFiles(sDir))
+            foreach (string f in Directory.GetFiles(sDir)) 
                 files.Add(f);
 
             foreach (string d in Directory.GetDirectories(sDir))
             {
-                (Boolean errorOccured, List<string> results) search = SearchDirectory(d, ErrorOccured);
+                if (ListenToCancelRequest && CancellationOfSearchPending)
+                {
+                    CancellationOfSearchPending = false;
+                    return (true, files);
+                }
+
+                (Boolean errorOccured, List<string> results) search = SearchDirectory(d, ErrorOccured, ListenToCancelRequest);
                 ErrorOccured = search.errorOccured || ErrorOccured;
                 files.AddRange(search.results);
             }
