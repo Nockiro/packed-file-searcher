@@ -387,8 +387,16 @@ namespace ZipFileSearcher
         {
             if (MessageBox.Show("Are you sure you want to *delete* all the selected packages?", "Sure?", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
+
                 foreach (ListViewItem item in lv_results.SelectedItems)
+                {
                     File.Delete((item.Tag as SearchResultInstance).PackagePath);
+
+                    foreach (ListViewItem itm in lv_results.Items)
+                        if ((itm.Tag as SearchResultInstance).PackagePath == (item.Tag as SearchResultInstance).PackagePath)
+                            itm.Remove();
+                }
+
             }
         }
 
