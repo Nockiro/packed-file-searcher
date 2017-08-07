@@ -31,11 +31,11 @@ namespace PackedFileSearcher
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem(new string[] {
             "MyGoodZip.zip",
             "%:\\WholyFolder",
             "Zip"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem(new string[] {
             "TestZip2",
             "%:\\SomeOtherFolder"}, -1);
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
@@ -68,6 +68,7 @@ namespace PackedFileSearcher
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
             this.btn_search = new System.Windows.Forms.ToolStripButton();
             this.tsm_searchText = new System.Windows.Forms.ToolStripTextBox();
+            this.btn_settings = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.pb_status = new System.Windows.Forms.ToolStripProgressBar();
             this.lbl_status = new System.Windows.Forms.ToolStripStatusLabel();
@@ -261,8 +262,8 @@ namespace PackedFileSearcher
             this.lv_files.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lv_files.FullRowSelect = true;
             this.lv_files.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem3,
-            listViewItem4});
+            listViewItem5,
+            listViewItem6});
             this.lv_files.Location = new System.Drawing.Point(3, 3);
             this.lv_files.Name = "lv_files";
             this.lv_files.ShowGroups = false;
@@ -349,10 +350,11 @@ namespace PackedFileSearcher
             this.toolStrip2.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btn_search,
-            this.tsm_searchText});
+            this.tsm_searchText,
+            this.btn_settings});
             this.toolStrip2.Location = new System.Drawing.Point(0, 35);
             this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Padding = new System.Windows.Forms.Padding(0, 0, 3, 0);
+            this.toolStrip2.Padding = new System.Windows.Forms.Padding(5, 0, 3, 0);
             this.toolStrip2.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
             this.toolStrip2.Size = new System.Drawing.Size(1388, 25);
             this.toolStrip2.TabIndex = 4;
@@ -385,6 +387,16 @@ namespace PackedFileSearcher
             this.tsm_searchText.Leave += new System.EventHandler(this.tsm_searchText_Leave);
             this.tsm_searchText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tsm_searchText_KeyDown);
             this.tsm_searchText.Click += new System.EventHandler(this.tsm_searchText_Click);
+            // 
+            // btn_settings
+            // 
+            this.btn_settings.Image = global::PackedFileSearcher.Properties.Resources.settings_verysmall;
+            this.btn_settings.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btn_settings.Name = "btn_settings";
+            this.btn_settings.Padding = new System.Windows.Forms.Padding(8, 0, 0, 0);
+            this.btn_settings.Size = new System.Drawing.Size(77, 22);
+            this.btn_settings.Text = "Settings";
+            this.btn_settings.Click += new System.EventHandler(this.btn_settings_Click);
             // 
             // statusStrip1
             // 
@@ -502,6 +514,7 @@ namespace PackedFileSearcher
         private ColumnHeader chTime;
         private ToolStripButton btn_deletefile;
         private ToolStripButton btn_removeFiles;
+        private ToolStripButton btn_settings;
     }
 }
 

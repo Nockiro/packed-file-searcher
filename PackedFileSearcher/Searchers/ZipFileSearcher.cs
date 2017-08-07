@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -54,8 +55,15 @@ namespace PackedFileSearcher.Searchers
                     foreach (ZipArchiveEntry entry in zip.GetRawEntries())
                     {
 
-                        if (Regex.IsMatch(entry.Name, Utils.WildCardToRegular(pattern)))
-                            MatchingEntries.Add(new SearchResultInstance(this, Path, entry.FullName, entry.Name, (ulong)entry.Length, entry.LastWriteTime));
+                        if (Regex.IsMatch(entry.FullName, Utils.WildCardToRegular(pattern)))
+                        {
+                            Boolean isDir = false;
+
+                            if (entry.FullName.EndsWith("/") && entry.Name == "")
+                                isDir = true;
+
+                            MatchingEntries.Add(new SearchResultInstance(this, Path, entry.FullName, entry.Name, (ulong)entry.Length, entry.LastWriteTime, isDir));
+                        }
                     }
 
             }
@@ -78,7 +86,27 @@ namespace PackedFileSearcher.Searchers
             try
             {
                 using (ZipArchive zip = ZipFile.Open(Path, ZipArchiveMode.Read))
-                    zip.GetRawEntries().Where(entry => entry.FullName == s.FolderPath).FirstOrDefault()?.ExtractToFile(savePath);
+                {
+                    if (!s.IsDir)
+                        foreach (ZipArchiveEntry entry in zip.GetRawEntries().Where(entry => entry.FullName == s.FolderPath))
+                            entry.ExtractToFile(savePath);
+                    else
+                    {
+                        var result = from currEntry in zip.GetRawEntries()
+                                     where System.IO.Path.GetDirectoryName(currEntry.FullName) == System.IO.Path.GetDirectoryName(s.FolderPath)
+                                     where !String.IsNullOrEmpty(currEntry.Name)
+                                     select currEntry;
+
+
+                        foreach (ZipArchiveEntry entry in result)
+                        {
+                            string endPath = System.IO.Path.Combine(savePath, entry.FullName);
+                            if (!Directory.Exists(System.IO.Path.GetDirectoryName(endPath)))
+                                Directory.CreateDirectory(System.IO.Path.GetDirectoryName(endPath));
+                            entry.ExtractToFile(endPath);
+                        }
+                    }
+                }
 
                 return true;
             }

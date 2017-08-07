@@ -111,18 +111,8 @@ namespace PackedFileSearcher
         #region toolbar
         private void btn_extract_Click(object sender, EventArgs e)
         {
-            if (lv_results.SelectedItems.Count == 1)
-            {
-                using (SaveFileDialog sfd = new SaveFileDialog())
-                {
-                    sfd.FileName = (lv_results.SelectedItems[0].Tag as SearchResultInstance).FileName;
-                    sfd.ShowDialog();
 
-                    if (sfd.FileName != "")
-                        (lv_results.SelectedItems[0].Tag as SearchResultInstance).SearcherInstance.extract(lv_results.SelectedItems[0].Tag as SearchResultInstance, sfd.FileName);
-                }
-            }
-            else if (lv_results.SelectedItems.Count > 1)
+            if (lv_results.SelectedItems.Count > 1 || lv_results.SelectedItems.Cast<ListViewItem>().Where(it => (it.Tag as SearchResultInstance).IsDir).Any())
             {
                 VistaFolderBrowserDialog fbd = new VistaFolderBrowserDialog();
                 fbd.Multiselect = false;
@@ -142,6 +132,17 @@ namespace PackedFileSearcher
                         );
                     }
 
+            }
+            else if (lv_results.SelectedItems.Count == 1)
+            {
+                using (SaveFileDialog sfd = new SaveFileDialog())
+                {
+                    sfd.FileName = (lv_results.SelectedItems[0].Tag as SearchResultInstance).FileName;
+                    sfd.ShowDialog();
+
+                    if (sfd.FileName != "")
+                        (lv_results.SelectedItems[0].Tag as SearchResultInstance).SearcherInstance.extract(lv_results.SelectedItems[0].Tag as SearchResultInstance, sfd.FileName);
+                }
             }
         }
 
@@ -222,6 +223,8 @@ namespace PackedFileSearcher
             lv_files.EndUpdate();
         }
         private void lbl_caption_Click(object sender, EventArgs e) => Process.Start("https://github.com/Nockiro/packed-file-searcher");
+
+        private void btn_settings_Click(object sender, EventArgs e) => new FrmSettings().Show();
         #endregion
 
         #region search and status elements
@@ -477,6 +480,5 @@ namespace PackedFileSearcher
             tsm_searchText.Enabled = true;
         }
         #endregion
-
     }
 }

@@ -34,5 +34,17 @@ namespace PackedFileSearcher.Properties {
                 this["UseWholePathForFileNames"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SearchInDirs {
+            get {
+                return ((bool)(this["SearchInDirs"]));
+            }
+            set {
+                this["SearchInDirs"] = value;
+            }
+        }
     }
 }

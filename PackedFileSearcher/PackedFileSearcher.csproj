@@ -74,6 +74,12 @@
     <Compile Include="FrmMain.Designer.cs">
       <DependentUpon>FrmMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmSettings.Designer.cs">
+      <DependentUpon>FrmSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Searchers\ISearcher.cs" />
@@ -83,6 +89,9 @@
     <Compile Include="Classes\SearchResultInstance.cs" />
     <EmbeddedResource Include="FrmMain.resx">
       <DependentUpon>FrmMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmSettings.resx">
+      <DependentUpon>FrmSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -127,6 +136,9 @@
     <None Include="ico\plus_2.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ico\settings_verysmall.png" />
+    <None Include="ico\settings_small.png" />
+    <None Include="ico\settings.png" />
     <None Include="ico\search_verysmall.png" />
     <None Include="ico\search_small.png" />
     <None Include="ico\search.png" />

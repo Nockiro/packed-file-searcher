@@ -59,8 +59,8 @@ namespace PackedFileSearcher.Searchers
                 foreach (ArchiveFileInfo entry in extr.ArchiveFileData)
                 {
 
-                    if (Regex.IsMatch(entry.FileName, Utils.WildCardToRegular(pattern)) && !entry.IsDirectory)
-                        MatchingEntries.Add(new SearchResultInstance(this, Path, entry.FileName, System.IO.Path.GetFileName(entry.FileName), entry.Size, entry.LastWriteTime));
+                    if (Regex.IsMatch(entry.FileName, Utils.WildCardToRegular(pattern)) && (!entry.IsDirectory || Properties.Settings.Default.SearchInDirs))
+                        MatchingEntries.Add(new SearchResultInstance(this, Path, entry.FileName, System.IO.Path.GetFileName(entry.FileName), entry.Size, entry.LastWriteTime, entry.IsDirectory));
                 }
 
 
@@ -85,7 +85,7 @@ namespace PackedFileSearcher.Searchers
             {
                 SevenZipBase.SetLibraryPath("3rdParty" + System.IO.Path.DirectorySeparatorChar + "7z.dll");
                 using (SevenZipExtractor extr = new SevenZipExtractor(Path))
-                    extr.ExtractFiles(savePath, s.FolderPath);
+                        extr.ExtractFiles(savePath, s.FolderPath);
 
                 return true;
             }

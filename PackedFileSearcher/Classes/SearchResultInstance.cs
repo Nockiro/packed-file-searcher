@@ -37,13 +37,19 @@ namespace PackedFileSearcher
         public DateTimeOffset LastWrite { get; }
 
         /// <summary>
+        /// True if the file is no file but a directory
+        /// </summary>
+        public Boolean IsDir { get; }
+
+        /// <summary>
         /// Represents a search result
         /// </summary>
         /// <param name="path">Path to the original archive, eg. C:\test\test.zip</param>
         /// <param name="insidePath">Path inside the zip, eg. Backup\99AirBaloons.txt</param>
         /// <param name="filename">File name</param>
         /// <param name="entryLength">Size of the unpacked entry in the archive</param>
-        public SearchResultInstance(ISearcher si, string path, string insidePath, string filename, ulong entryLength, DateTimeOffset lastWrite)
+        /// <param name="isDir">True if search result represents a directory</param>
+        public SearchResultInstance(ISearcher si, string path, string insidePath, string filename, ulong entryLength, DateTimeOffset lastWrite, Boolean isDir)
         {
             SearcherInstance = si;
             PackagePath = path;
@@ -51,6 +57,7 @@ namespace PackedFileSearcher
             FileName = filename;
             EntryLength = entryLength;
             LastWrite = lastWrite;
+            IsDir = isDir;
         }
 
     }
