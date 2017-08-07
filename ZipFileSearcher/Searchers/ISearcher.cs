@@ -36,5 +36,10 @@ namespace ZipFileSearcher.Searchers
         /// Path to file
         /// </summary>
         string Path { get; }
+
+        /// <summary>
+        /// If the package is damaged, this is to be set to true
+        /// </summary>
+        bool Error { get; }
     }
 }

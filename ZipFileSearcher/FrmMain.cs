@@ -54,13 +54,33 @@ namespace ZipFileSearcher
 
 
         #region helpers
+        /// <summary>
+        /// Set Status in the status bar
+        /// </summary>
+        /// <param name="text">Status text to be shown</param>
+        /// <param name="ConsoleLog">True if output to console</param>
+        protected void setStatus(string text, bool ConsoleLog)
+        {
+            setStatus(text, false, false, 0, ConsoleLog);
+        }
 
-        protected void setStatus(string text, Boolean progress = false, Boolean marquee = false, int percent = 0)
+        /// <summary>
+        /// Set Status in the status bar
+        /// </summary>
+        /// <param name="text">Status text to be shown</param>
+        /// <param name="progress">True if progress bar should be visible</param>
+        /// <param name="marquee">True if marquee style, false if Continuous</param>
+        /// <param name="percent">Progress in percent</param>
+        /// <param name="ConsoleLog">True if output to console</param>
+        protected void setStatus(string text, Boolean progress = false, Boolean marquee = false, int percent = 0, bool ConsoleLog = false)
         {
             lbl_status.Text = text;
             pb_status.Visible = progress;
             pb_status.Style = marquee ? ProgressBarStyle.Marquee : ProgressBarStyle.Continuous;
             pb_status.Value = percent;
+
+            if (ConsoleLog)
+                Console.WriteLine("(" + DateTime.Now.TimeOfDay + ") " + text);
         }
 
         private ListViewItem processFilePath(string filePath)
@@ -107,14 +127,14 @@ namespace ZipFileSearcher
 
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
-                    setStatus("Read files.. ", true, true);
+                    setStatus("Read files.. ", true, true, 0, true);
                     foreach (var f in ofd.FileNames)
                     {
-                        setStatus("Read files.. " + f, true, true);
+                        setStatus("Read files.. " + f, true, true, 0, true);
                         // Process file path into a new listviewitem and add it
                         lv_files.Items.Add(processFilePath(f));
                     }
-                    setStatus(DefaultStatusText);
+                    setStatus(DefaultStatusText, true);
                 }
             }
         }
@@ -149,7 +169,7 @@ namespace ZipFileSearcher
                 bw_search.CancelAsync();
 
             requestedTimesOfCancellation++;
-            this.InvokeIfRequired(() => setStatus("Requested cancellation, please wait..", true, true));
+            this.InvokeIfRequired(() => setStatus("Requested cancellation, please wait..", true, true, 0, true));
 
             if (requestedTimesOfCancellation == 10 && bw_loadFiles.IsBusy)
                 if (MessageBox.Show("U really wanna do dis the hard way?", "Sure?", MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -209,13 +229,13 @@ namespace ZipFileSearcher
                     continue;
 
                 CurrentWorkingState = WorkingState.DirectorySearch;
-                this.InvokeIfRequired(() => setStatus($"Listing files in directories.. { path }", true, true));
+                this.InvokeIfRequired(() => setStatus($"Listing files in directories.. { path }", true, true, 0, true));
 
                 (Boolean errorOccured, List<string> results) search = Utils.SearchDirectory(path);
                 string[] files = search.results.ToArray();
 
                 CurrentWorkingState = WorkingState.FileScan;
-                this.InvokeIfRequired(() => setStatus("Read files in directories.. ", true, true));
+                this.InvokeIfRequired(() => setStatus("Read files in directories.. ", true, true, 0, true));
                 // Loop through each file ..
                 foreach (string file in files)
                 {
@@ -234,6 +254,8 @@ namespace ZipFileSearcher
                     }
                 }
                 errorOccured = search.errorOccured || errorOccured;
+                if (search.errorOccured)
+                    this.InvokeIfRequired(() => setStatus("Warning! There seems to be a problem with " + path, true, true, 0, true));
             }
 
             if (errorOccured)
@@ -242,7 +264,8 @@ namespace ZipFileSearcher
 
         private void bw_loadFiles_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            setStatus(DefaultStatusText);
+            setStatus(DefaultStatusText, true);
+
             btn_abort.Visible = false;
             CurrentWorkingState = WorkingState.None;
             requestedTimesOfCancellation = 0;
@@ -253,17 +276,19 @@ namespace ZipFileSearcher
         {
             List<SearchResultInstance> sri = new List<SearchResultInstance>();
 
-
             foreach (ISearcher searcher in (List<object>)e.Argument)
             {
-                this.InvokeIfRequired(() => setStatus($"Search for {tsm_searchText.Text} in {searcher.Path}.. ", true, true));
+                this.InvokeIfRequired(() => setStatus($"Search for {tsm_searchText.Text} in {searcher.Path}.. ", true, true, 0));
                 sri.AddRange(searcher.Search(tsm_searchText.Text));
 
                 if (bw_search.CancellationPending)
                 {
                     break;
-                    e.Cancel = true;
                 }
+
+                if (searcher.Error)
+                    this.InvokeIfRequired(() => setStatus("Warning! There seems to be a problem with " + searcher.Path, true, true, 0, true));
+
             }
             e.Result = sri;
         }
@@ -288,7 +313,7 @@ namespace ZipFileSearcher
                 lv_results.Items.Add(item);
             }
 
-            setStatus(DefaultStatusText);
+            setStatus(DefaultStatusText, true);
             btn_abort.Visible = false;
             requestedTimesOfCancellation = 0;
             tsm_searchText.Enabled = true;

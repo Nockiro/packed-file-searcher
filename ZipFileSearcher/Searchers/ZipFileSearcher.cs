@@ -8,9 +8,20 @@ namespace ZipFileSearcher.Searchers
 {
     public class ZipFileSearcher : ISearcher
     {
+        /// <summary>
+        /// Text to be shown in the OpenFileDialog
+        /// </summary>
         public string ExtensionText => "Zip files (*.zip) | *.zip";
 
+        /// <summary>
+        /// Path of this certain package
+        /// </summary>
         public string Path { get; protected set; }
+
+        /// <summary>
+        /// If the package is damaged, this is to be set to true
+        /// </summary>
+        public Boolean Error { get; private set; } = false;
 
         public ZipFileSearcher()
         {
@@ -26,16 +37,23 @@ namespace ZipFileSearcher.Searchers
         {
             List<SearchResultInstance> MatchingEntries = new List<SearchResultInstance>();
 
-            using (ZipArchive zip = ZipFile.Open(Path, ZipArchiveMode.Read))
+            try
+            {
+                using (ZipArchive zip = ZipFile.Open(Path, ZipArchiveMode.Read))
 
-                foreach (ZipArchiveEntry entry in zip.GetRawEntries())
-                {
+                    foreach (ZipArchiveEntry entry in zip.GetRawEntries())
+                    {
 
-                    if (Regex.IsMatch(entry.Name, Utils.WildCardToRegular(pattern)))
-                        MatchingEntries.Add(new SearchResultInstance(Path, entry.FullName, entry.Name));
-                }
+                        if (Regex.IsMatch(entry.Name, Utils.WildCardToRegular(pattern)))
+                            MatchingEntries.Add(new SearchResultInstance(Path, entry.FullName, entry.Name));
+                    }
 
-
+            }
+            catch (Exception)
+            {
+                Error = true;
+                return MatchingEntries;
+            }
             return MatchingEntries;
         }
 

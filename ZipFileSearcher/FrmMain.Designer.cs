@@ -180,9 +180,9 @@ namespace ZipFileSearcher
             this.label1.ForeColor = System.Drawing.SystemColors.WindowText;
             this.label1.Location = new System.Drawing.Point(3, 91);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(176, 21);
+            this.label1.Size = new System.Drawing.Size(38, 21);
             this.label1.TabIndex = 2;
-            this.label1.Text = "Exceptional behaviour:";
+            this.label1.Text = "Log";
             // 
             // tb_log
             // 
