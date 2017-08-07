@@ -17,7 +17,7 @@ public static class Utils
         return "^" + Regex.Escape(value).Replace("\\?", ".").Replace("\\*", ".*") + "$";
     }
 
-    // if a thread or background worker requests a cancellation, it's important for the user experience to softly cancel it..
+    // If a thread or background worker requests a cancellation, it's important for the user experience to softly cancel it..
     // Yes, it's no clean programming, but it does the work
     public static Boolean CancellationOfSearchPending = false;
     public static (Boolean errorOccured, List<string> results) SearchDirectory(string sDir, Boolean errorOccured = false, Boolean ListenToCancelRequest = true)
@@ -39,6 +39,7 @@ public static class Utils
                 }
 
                 (Boolean errorOccured, List<string> results) search = SearchDirectory(d, ErrorOccured, ListenToCancelRequest);
+
                 ErrorOccured = search.errorOccured || ErrorOccured;
                 files.AddRange(search.results);
             }

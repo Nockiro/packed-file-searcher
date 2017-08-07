@@ -32,7 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>if_search_298865.ico</ApplicationIcon>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="SevenZipSharp, Version=0.64.3890.29348, Culture=neutral, PublicKeyToken=20de82c62b055c88, processorArchitecture=MSIL">
@@ -60,14 +60,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\SearcherType.cs" />
-    <Compile Include="Extensions\AbortableBackgroundWorker.cs">
+    <Compile Include="Controls\AbortableBackgroundWorker.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Extensions\ConsoleWriter.cs" />
-    <Compile Include="Extensions\Extensions.cs" />
-    <Compile Include="Extensions\Utils.cs" />
-    <Compile Include="Extensions\VistaFolderBrowserDialog.cs" />
-    <Compile Include="Extensions\ZipArchiveHelper.cs" />
+    <Compile Include="Classes\ConsoleWriter.cs" />
+    <Compile Include="Classes\Extensions.cs" />
+    <Compile Include="Classes\Utils.cs" />
+    <Compile Include="Controls\VistaFolderBrowserDialog.cs" />
+    <Compile Include="Classes\ZipArchiveHelper.cs" />
     <Compile Include="FrmMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -80,7 +80,7 @@
     <Compile Include="Searchers\Searcher.cs" />
     <Compile Include="Searchers\SevenZipSearcher.cs" />
     <Compile Include="Searchers\ZipFileSearcher.cs" />
-    <Compile Include="SearchResultInstance.cs" />
+    <Compile Include="Classes\SearchResultInstance.cs" />
     <EmbeddedResource Include="FrmMain.resx">
       <DependentUpon>FrmMain.cs</DependentUpon>
     </EmbeddedResource>
@@ -136,7 +136,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="3rdParty\SevenZipSharp.dll" />
-    <Content Include="if_search_298865.ico" />
+    <Content Include="icon.ico" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
