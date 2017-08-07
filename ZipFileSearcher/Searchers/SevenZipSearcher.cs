@@ -13,7 +13,7 @@ namespace PackedFileSearcher.Searchers
         /// <summary>
         /// Text to be shown in the OpenFileDialog
         /// </summary>
-        public string ExtensionText => "7Zip files (*.7z;*.xz;*.gz;*.bz;*.bz2;*.tar;*.sfx) | *.7z;*.xz;*.gz;*.bz;*.bz2;*.tar;*.sfx";
+        public string ExtensionText => "7Zip files (*.7z;*.xz;*.gz;*.bz;*.bz2;*.tar;*.sfx;*.rar;*.iza;*.iso) | *.7z;*.xz;*.gz;*.bz;*.bz2;*.tar;*.sfx;*.rar;*.iso";
 
         /// <summary>
         /// Path of this certain package
@@ -59,7 +59,7 @@ namespace PackedFileSearcher.Searchers
                 foreach (ArchiveFileInfo entry in extr.ArchiveFileData)
                 {
 
-                    if (Regex.IsMatch(entry.FileName, Utils.WildCardToRegular(pattern)))
+                    if (Regex.IsMatch(entry.FileName, Utils.WildCardToRegular(pattern)) && !entry.IsDirectory)
                         MatchingEntries.Add(new SearchResultInstance(this, Path, entry.FileName, System.IO.Path.GetFileName(entry.FileName), entry.Size, entry.LastWriteTime));
                 }
 

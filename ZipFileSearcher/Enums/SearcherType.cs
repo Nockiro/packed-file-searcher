@@ -18,6 +18,16 @@ namespace PackedFileSearcher.Enums
                 case ".zip":
                     return SearcherType.ZipFile;
                 case ".7z":
+                case ".bz":
+                case ".bz2":
+                case ".gz":
+                case ".xz":
+                case ".tar":
+                case ".wim":
+                case ".rar":
+                case ".sfx":
+                case ".lzh":
+                case ".iso":
                     return SearcherType.SevenZip;
                 default:
                     return SearcherType.None;
