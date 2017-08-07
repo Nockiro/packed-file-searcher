@@ -221,6 +221,7 @@ namespace PackedFileSearcher
 
             lv_files.EndUpdate();
         }
+        private void lbl_caption_Click(object sender, EventArgs e) => Process.Start("https://github.com/Nockiro/packed-file-searcher");
         #endregion
 
         #region search and status elements
@@ -476,5 +477,6 @@ namespace PackedFileSearcher
             tsm_searchText.Enabled = true;
         }
         #endregion
+
     }
 }

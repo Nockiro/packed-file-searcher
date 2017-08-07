@@ -31,19 +31,13 @@ namespace PackedFileSearcher
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
-            "MyGoodZip.zip",
-            "%:\\WholyFolder\\",
-            "Zip"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
-            "TestZip2",
-            "%:\\SomeOtherFolder\\"}, -1);
             System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem(new string[] {
-            "rrrrr",
-            "rrree"}, -1);
+            "MyGoodZip.zip",
+            "%:\\WholyFolder",
+            "Zip"}, -1);
             System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem(new string[] {
-            "rrrrr",
-            "abcde"}, -1);
+            "TestZip2",
+            "%:\\SomeOtherFolder"}, -1);
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btn_addFiles = new System.Windows.Forms.ToolStripMenuItem();
             this.btn_addFolder = new System.Windows.Forms.ToolStripMenuItem();
@@ -144,10 +138,13 @@ namespace PackedFileSearcher
             // 
             this.lbl_caption.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.lbl_caption.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.lbl_caption.Enabled = false;
+            this.lbl_caption.IsLink = true;
+            this.lbl_caption.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
+            this.lbl_caption.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
             this.lbl_caption.Name = "lbl_caption";
-            this.lbl_caption.Size = new System.Drawing.Size(196, 32);
-            this.lbl_caption.Text = "Robin Freund - Packed File Searcher";
+            this.lbl_caption.Size = new System.Drawing.Size(167, 32);
+            this.lbl_caption.Text = "Nockiro - Packed File Searcher";
+            this.lbl_caption.Click += new System.EventHandler(this.lbl_caption_Click);
             // 
             // toolStripSeparator2
             // 
@@ -180,7 +177,7 @@ namespace PackedFileSearcher
             this.btn_deletefile.Image = global::PackedFileSearcher.Properties.Resources.del;
             this.btn_deletefile.Name = "btn_deletefile";
             this.btn_deletefile.Size = new System.Drawing.Size(92, 32);
-            this.btn_deletefile.Text = "Delete fil(es)";
+            this.btn_deletefile.Text = "Delete file(s)";
             this.btn_deletefile.Click += new System.EventHandler(this.btn_deletefile_Click);
             // 
             // tabControl
@@ -238,7 +235,7 @@ namespace PackedFileSearcher
             this.lbl_welcome.AutoSize = true;
             this.lbl_welcome.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_welcome.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.lbl_welcome.Location = new System.Drawing.Point(498, 33);
+            this.lbl_welcome.Location = new System.Drawing.Point(534, 36);
             this.lbl_welcome.Name = "lbl_welcome";
             this.lbl_welcome.Size = new System.Drawing.Size(357, 21);
             this.lbl_welcome.TabIndex = 0;
@@ -264,8 +261,6 @@ namespace PackedFileSearcher
             this.lv_files.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lv_files.FullRowSelect = true;
             this.lv_files.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2,
             listViewItem3,
             listViewItem4});
             this.lv_files.Location = new System.Drawing.Point(3, 3);
