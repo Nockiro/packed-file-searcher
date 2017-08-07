@@ -5,9 +5,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ZipFileSearcher.Enums;
+using PackedFileSearcher.Enums;
 
-namespace ZipFileSearcher.Searchers
+namespace PackedFileSearcher.Searchers
 {
     public class Searcher
     {
@@ -24,6 +24,8 @@ namespace ZipFileSearcher.Searchers
         {
             switch (type)
             {
+                case SearcherType.SevenZip:
+                    return new SevenZipSearcher();
                 case SearcherType.ZipFile:
                 default:
                     return new ZipFileSearcher();

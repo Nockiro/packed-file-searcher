@@ -10,10 +10,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using ZipFileSearcher.Enums;
-using ZipFileSearcher.Searchers;
+using PackedFileSearcher.Enums;
+using PackedFileSearcher.Searchers;
 
-namespace ZipFileSearcher
+namespace PackedFileSearcher
 {
     public partial class FrmMain : Form
     {
@@ -154,8 +154,12 @@ namespace ZipFileSearcher
 
         private void btn_removeFiles_Click(object sender, EventArgs e)
         {
+            lv_files.BeginUpdate();
+
             foreach (ListViewItem lvi in lv_files.SelectedItems)
-                lv_files.Items.Remove(lvi);
+                lvi.Remove();
+
+            lv_files.EndUpdate();
         }
 
 
@@ -311,6 +315,7 @@ namespace ZipFileSearcher
             if (!tabControl.TabPages.Contains(tb_results))
                 tabControl.TabPages.Add(tb_results);
 
+            lv_results.BeginUpdate();
             foreach (SearchResultInstance inst in e.Result as List<SearchResultInstance>)
             {
                 if (bw_search.CancellationPending && e.Cancelled)
@@ -326,6 +331,7 @@ namespace ZipFileSearcher
 
                 lv_results.Items.Add(item);
             }
+            lv_results.EndUpdate();
 
             setStatus(DefaultStatusText, true);
             btn_abort.Visible = false;

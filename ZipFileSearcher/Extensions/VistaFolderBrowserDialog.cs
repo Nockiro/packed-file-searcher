@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace ZipFileSearcher
+namespace PackedFileSearcher
 {
     /// <summary>
     /// Prompts the user to select a folder with a vista style dialog.

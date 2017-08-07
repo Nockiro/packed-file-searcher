@@ -1,7 +1,7 @@
 ﻿
 using System.Collections.Generic;
 
-namespace ZipFileSearcher.Searchers
+namespace PackedFileSearcher.Searchers
 {
     public interface ISearcher
     {

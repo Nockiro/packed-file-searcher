@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace ZipFileSearcher
+namespace PackedFileSearcher
 {
     partial class FrmMain
     {
@@ -30,24 +30,30 @@ namespace ZipFileSearcher
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
             "MyGoodZip.zip",
             "%:\\WholyFolder\\",
             "Zip"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
             "TestZip2",
             "%:\\SomeOtherFolder\\"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem(new string[] {
             "rrrrr",
             "rrree"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem(new string[] {
             "rrrrr",
             "abcde"}, -1);
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.btn_addFiles = new System.Windows.Forms.ToolStripMenuItem();
+            this.btn_addFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.btn_removeFiles = new System.Windows.Forms.ToolStripButton();
             this.lbl_caption = new System.Windows.Forms.ToolStripLabel();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.btn_extract = new System.Windows.Forms.ToolStripButton();
+            this.btn_copyPath = new System.Windows.Forms.ToolStripButton();
+            this.btn_deletefile = new System.Windows.Forms.ToolStripButton();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tb_intro = new System.Windows.Forms.TabPage();
             this.label1 = new System.Windows.Forms.Label();
@@ -63,23 +69,17 @@ namespace ZipFileSearcher
             this.chResultPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chResultFileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chResultRelativePath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
+            this.btn_search = new System.Windows.Forms.ToolStripButton();
             this.tsm_searchText = new System.Windows.Forms.ToolStripTextBox();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.pb_status = new System.Windows.Forms.ToolStripProgressBar();
             this.lbl_status = new System.Windows.Forms.ToolStripStatusLabel();
-            this.bw_loadFiles = new ZipFileSearcher.AbortableBackgroundWorker();
-            this.bw_search = new ZipFileSearcher.AbortableBackgroundWorker();
-            this.btn_search = new System.Windows.Forms.ToolStripButton();
-            this.btn_addFiles = new System.Windows.Forms.ToolStripMenuItem();
-            this.btn_addFolder = new System.Windows.Forms.ToolStripMenuItem();
-            this.btn_removeFiles = new System.Windows.Forms.ToolStripMenuItem();
-            this.btn_extract = new System.Windows.Forms.ToolStripButton();
             this.btn_abort = new System.Windows.Forms.ToolStripMenuItem();
-            this.btn_copyPath = new System.Windows.Forms.ToolStripButton();
-            this.chSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.chTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.btn_deletefile = new System.Windows.Forms.ToolStripButton();
+            this.bw_loadFiles = new PackedFileSearcher.AbortableBackgroundWorker();
+            this.bw_search = new PackedFileSearcher.AbortableBackgroundWorker();
             this.toolStrip1.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tb_intro.SuspendLayout();
@@ -111,10 +111,34 @@ namespace ZipFileSearcher
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
             // 
+            // btn_addFiles
+            // 
+            this.btn_addFiles.Image = global::PackedFileSearcher.Properties.Resources.addfile;
+            this.btn_addFiles.Name = "btn_addFiles";
+            this.btn_addFiles.Size = new System.Drawing.Size(87, 35);
+            this.btn_addFiles.Text = "Add files..";
+            this.btn_addFiles.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
+            // 
+            // btn_addFolder
+            // 
+            this.btn_addFolder.Image = global::PackedFileSearcher.Properties.Resources.addfolder;
+            this.btn_addFolder.Name = "btn_addFolder";
+            this.btn_addFolder.Size = new System.Drawing.Size(97, 35);
+            this.btn_addFolder.Text = "Add folder..";
+            this.btn_addFolder.Click += new System.EventHandler(this.btn_addFolder_Click);
+            // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 35);
+            // 
+            // btn_removeFiles
+            // 
+            this.btn_removeFiles.Image = global::PackedFileSearcher.Properties.Resources.minus_2;
+            this.btn_removeFiles.Name = "btn_removeFiles";
+            this.btn_removeFiles.Size = new System.Drawing.Size(100, 32);
+            this.btn_removeFiles.Text = "Remove files..";
+            this.btn_removeFiles.Click += new System.EventHandler(this.btn_removeFiles_Click);
             // 
             // lbl_caption
             // 
@@ -122,13 +146,42 @@ namespace ZipFileSearcher
             this.lbl_caption.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.lbl_caption.Enabled = false;
             this.lbl_caption.Name = "lbl_caption";
-            this.lbl_caption.Size = new System.Drawing.Size(151, 32);
-            this.lbl_caption.Text = "Robin Freund - ZipSearcher";
+            this.lbl_caption.Size = new System.Drawing.Size(196, 32);
+            this.lbl_caption.Text = "Robin Freund - Packed File Searcher";
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(6, 35);
+            // 
+            // btn_extract
+            // 
+            this.btn_extract.Enabled = false;
+            this.btn_extract.Image = global::PackedFileSearcher.Properties.Resources.extract_col;
+            this.btn_extract.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btn_extract.Name = "btn_extract";
+            this.btn_extract.Size = new System.Drawing.Size(92, 32);
+            this.btn_extract.Text = "Extract entry";
+            this.btn_extract.Click += new System.EventHandler(this.btn_extract_Click);
+            // 
+            // btn_copyPath
+            // 
+            this.btn_copyPath.Enabled = false;
+            this.btn_copyPath.Image = ((System.Drawing.Image)(resources.GetObject("btn_copyPath.Image")));
+            this.btn_copyPath.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btn_copyPath.Name = "btn_copyPath";
+            this.btn_copyPath.Size = new System.Drawing.Size(82, 32);
+            this.btn_copyPath.Text = "Copy path";
+            this.btn_copyPath.Click += new System.EventHandler(this.btn_copyPath_Click);
+            // 
+            // btn_deletefile
+            // 
+            this.btn_deletefile.Enabled = false;
+            this.btn_deletefile.Image = global::PackedFileSearcher.Properties.Resources.del;
+            this.btn_deletefile.Name = "btn_deletefile";
+            this.btn_deletefile.Size = new System.Drawing.Size(92, 32);
+            this.btn_deletefile.Text = "Delete fil(es)";
+            this.btn_deletefile.Click += new System.EventHandler(this.btn_deletefile_Click);
             // 
             // tabControl
             // 
@@ -211,10 +264,10 @@ namespace ZipFileSearcher
             this.lv_files.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lv_files.FullRowSelect = true;
             this.lv_files.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem9,
-            listViewItem10,
-            listViewItem11,
-            listViewItem12});
+            listViewItem1,
+            listViewItem2,
+            listViewItem3,
+            listViewItem4});
             this.lv_files.Location = new System.Drawing.Point(3, 3);
             this.lv_files.Name = "lv_files";
             this.lv_files.ShowGroups = false;
@@ -286,6 +339,16 @@ namespace ZipFileSearcher
             this.chResultRelativePath.Text = "Relative path in file";
             this.chResultRelativePath.Width = 322;
             // 
+            // chSize
+            // 
+            this.chSize.Text = "Size of unpacked entry";
+            this.chSize.Width = 126;
+            // 
+            // chTime
+            // 
+            this.chTime.Text = "Last write";
+            this.chTime.Width = 129;
+            // 
             // toolStrip2
             // 
             this.toolStrip2.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
@@ -299,6 +362,17 @@ namespace ZipFileSearcher
             this.toolStrip2.Size = new System.Drawing.Size(1388, 25);
             this.toolStrip2.TabIndex = 4;
             this.toolStrip2.Text = "toolStrip2";
+            // 
+            // btn_search
+            // 
+            this.btn_search.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.btn_search.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btn_search.Image = global::PackedFileSearcher.Properties.Resources.search_verysmall;
+            this.btn_search.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btn_search.Name = "btn_search";
+            this.btn_search.Size = new System.Drawing.Size(23, 22);
+            this.btn_search.Text = "Start searching for string";
+            this.btn_search.Click += new System.EventHandler(this.btn_search_Click);
             // 
             // tsm_searchText
             // 
@@ -345,6 +419,17 @@ namespace ZipFileSearcher
             this.lbl_status.Size = new System.Drawing.Size(42, 17);
             this.lbl_status.Text = "Ready.";
             // 
+            // btn_abort
+            // 
+            this.btn_abort.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.btn_abort.Image = global::PackedFileSearcher.Properties.Resources.del;
+            this.btn_abort.Margin = new System.Windows.Forms.Padding(0, 0, 4, 0);
+            this.btn_abort.Name = "btn_abort";
+            this.btn_abort.Size = new System.Drawing.Size(65, 22);
+            this.btn_abort.Text = "Abort";
+            this.btn_abort.Visible = false;
+            this.btn_abort.Click += new System.EventHandler(this.btn_abort_Click);
+            // 
             // bw_loadFiles
             // 
             this.bw_loadFiles.WorkerSupportsCancellation = true;
@@ -357,91 +442,6 @@ namespace ZipFileSearcher
             this.bw_search.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bw_search_DoWork);
             this.bw_search.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bw_search_RunWorkerCompleted);
             // 
-            // btn_search
-            // 
-            this.btn_search.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.btn_search.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btn_search.Image = global::ZipFileSearcher.Properties.Resources.search_verysmall;
-            this.btn_search.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btn_search.Name = "btn_search";
-            this.btn_search.Size = new System.Drawing.Size(23, 22);
-            this.btn_search.Text = "Start searching for string";
-            this.btn_search.Click += new System.EventHandler(this.btn_search_Click);
-            // 
-            // btn_addFiles
-            // 
-            this.btn_addFiles.Image = global::ZipFileSearcher.Properties.Resources.addfile;
-            this.btn_addFiles.Name = "btn_addFiles";
-            this.btn_addFiles.Size = new System.Drawing.Size(87, 35);
-            this.btn_addFiles.Text = "Add files..";
-            this.btn_addFiles.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
-            // 
-            // btn_addFolder
-            // 
-            this.btn_addFolder.Image = global::ZipFileSearcher.Properties.Resources.addfolder;
-            this.btn_addFolder.Name = "btn_addFolder";
-            this.btn_addFolder.Size = new System.Drawing.Size(97, 35);
-            this.btn_addFolder.Text = "Add folder..";
-            this.btn_addFolder.Click += new System.EventHandler(this.btn_addFolder_Click);
-            // 
-            // btn_removeFiles
-            // 
-            this.btn_removeFiles.Image = global::ZipFileSearcher.Properties.Resources.minus_2;
-            this.btn_removeFiles.Name = "btn_removeFiles";
-            this.btn_removeFiles.Size = new System.Drawing.Size(108, 35);
-            this.btn_removeFiles.Text = "Remove files..";
-            this.btn_removeFiles.Click += new System.EventHandler(this.btn_removeFiles_Click);
-            // 
-            // btn_extract
-            // 
-            this.btn_extract.Enabled = false;
-            this.btn_extract.Image = global::ZipFileSearcher.Properties.Resources.extract_col;
-            this.btn_extract.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btn_extract.Name = "btn_extract";
-            this.btn_extract.Size = new System.Drawing.Size(92, 32);
-            this.btn_extract.Text = "Extract entry";
-            this.btn_extract.Click += new System.EventHandler(this.btn_extract_Click);
-            // 
-            // btn_abort
-            // 
-            this.btn_abort.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.btn_abort.Image = global::ZipFileSearcher.Properties.Resources.del;
-            this.btn_abort.Margin = new System.Windows.Forms.Padding(0, 0, 4, 0);
-            this.btn_abort.Name = "btn_abort";
-            this.btn_abort.Size = new System.Drawing.Size(65, 22);
-            this.btn_abort.Text = "Abort";
-            this.btn_abort.Visible = false;
-            this.btn_abort.Click += new System.EventHandler(this.btn_abort_Click);
-            // 
-            // btn_copyPath
-            // 
-            this.btn_copyPath.Enabled = false;
-            this.btn_copyPath.Image = ((System.Drawing.Image)(resources.GetObject("btn_copyPath.Image")));
-            this.btn_copyPath.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btn_copyPath.Name = "btn_copyPath";
-            this.btn_copyPath.Size = new System.Drawing.Size(82, 32);
-            this.btn_copyPath.Text = "Copy path";
-            this.btn_copyPath.Click += new System.EventHandler(this.btn_copyPath_Click);
-            // 
-            // chSize
-            // 
-            this.chSize.Text = "Size of unpacked entry";
-            this.chSize.Width = 126;
-            // 
-            // chTime
-            // 
-            this.chTime.Text = "Last write";
-            this.chTime.Width = 129;
-            // 
-            // btn_deletefile
-            // 
-            this.btn_deletefile.Enabled = false;
-            this.btn_deletefile.Image = global::ZipFileSearcher.Properties.Resources.del;
-            this.btn_deletefile.Name = "btn_deletefile";
-            this.btn_deletefile.Size = new System.Drawing.Size(92, 32);
-            this.btn_deletefile.Text = "Delete fil(es)";
-            this.btn_deletefile.Click += new System.EventHandler(this.btn_deletefile_Click);
-            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -453,7 +453,7 @@ namespace ZipFileSearcher
             this.Controls.Add(this.statusStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FrmMain";
-            this.Text = "ZipSearcher";
+            this.Text = "Packed File Searcher";
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.tabControl.ResumeLayout(false);
@@ -474,7 +474,6 @@ namespace ZipFileSearcher
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripMenuItem btn_addFiles;
         private System.Windows.Forms.ToolStripMenuItem btn_addFolder;
-        private System.Windows.Forms.ToolStripMenuItem btn_removeFiles;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.TabControl tabControl;
         private System.Windows.Forms.TabPage tb_intro;
@@ -507,6 +506,7 @@ namespace ZipFileSearcher
         private ColumnHeader chSize;
         private ColumnHeader chTime;
         private ToolStripButton btn_deletefile;
+        private ToolStripButton btn_removeFiles;
     }
 }
 

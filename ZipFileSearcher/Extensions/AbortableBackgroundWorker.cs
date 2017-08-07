@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ZipFileSearcher
+namespace PackedFileSearcher
 {
     public class AbortableBackgroundWorker : BackgroundWorker
     {

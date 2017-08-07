@@ -1,8 +1,8 @@
 ﻿
 using System;
-using ZipFileSearcher.Searchers;
+using PackedFileSearcher.Searchers;
 
-namespace ZipFileSearcher
+namespace PackedFileSearcher
 {
     public class SearchResultInstance
     {
@@ -24,7 +24,7 @@ namespace ZipFileSearcher
         /// <summary>
         /// Size of the unpacked entry in the archive
         /// </summary>
-        public long EntryLength { get; }
+        public ulong EntryLength { get; }
 
         /// <summary>
         /// Searcher Instance
@@ -43,7 +43,7 @@ namespace ZipFileSearcher
         /// <param name="insidePath">Path inside the zip, eg. Backup\99AirBaloons.txt</param>
         /// <param name="filename">File name</param>
         /// <param name="entryLength">Size of the unpacked entry in the archive</param>
-        public SearchResultInstance(ISearcher si, string path, string insidePath, string filename, long entryLength, DateTimeOffset lastWrite)
+        public SearchResultInstance(ISearcher si, string path, string insidePath, string filename, ulong entryLength, DateTimeOffset lastWrite)
         {
             SearcherInstance = si;
             PackagePath = path;

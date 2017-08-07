@@ -1,17 +1,19 @@
-﻿using System;
+﻿using SevenZip;
+using System;
 using System.Collections.Generic;
-using System.IO.Compression;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace PackedFileSearcher.Searchers
 {
-    public class ZipFileSearcher : ISearcher
+    public class SevenZipSearcher : ISearcher
     {
         /// <summary>
         /// Text to be shown in the OpenFileDialog
         /// </summary>
-        public string ExtensionText => "Zip files (*.zip) | *.zip";
+        public string ExtensionText => "7Zip files (*.7z;*.xz;*.gz;*.bz;*.bz2;*.tar;*.sfx) | *.7z;*.xz;*.gz;*.bz;*.bz2;*.tar;*.sfx";
 
         /// <summary>
         /// Path of this certain package
@@ -23,8 +25,9 @@ namespace PackedFileSearcher.Searchers
         /// </summary>
         public Boolean Error { get; private set; } = false;
 
-        public ZipFileSearcher()
+        public SevenZipSearcher()
         {
+
         }
 
         /// <summary>
@@ -47,16 +50,19 @@ namespace PackedFileSearcher.Searchers
         {
             List<SearchResultInstance> MatchingEntries = new List<SearchResultInstance>();
 
+
             try
             {
-                using (ZipArchive zip = ZipFile.Open(Path, ZipArchiveMode.Read))
+                SevenZipExtractor.SetLibraryPath("3rdParty" + System.IO.Path.DirectorySeparatorChar + "7z.dll");
+                var extr = new SevenZipExtractor(Path);
 
-                    foreach (ZipArchiveEntry entry in zip.GetRawEntries())
-                    {
+                foreach (ArchiveFileInfo entry in extr.ArchiveFileData)
+                {
 
-                        if (Regex.IsMatch(entry.Name, Utils.WildCardToRegular(pattern)))
-                            MatchingEntries.Add(new SearchResultInstance(this, Path, entry.FullName, entry.Name, (ulong)entry.Length, entry.LastWriteTime));
-                    }
+                    if (Regex.IsMatch(entry.FileName, Utils.WildCardToRegular(pattern)))
+                        MatchingEntries.Add(new SearchResultInstance(this, Path, entry.FileName, System.IO.Path.GetFileName(entry.FileName), entry.Size, entry.LastWriteTime));
+                }
+
 
             }
             catch (Exception)
@@ -77,8 +83,8 @@ namespace PackedFileSearcher.Searchers
         {
             try
             {
-                using (ZipArchive zip = ZipFile.Open(Path, ZipArchiveMode.Read))
-                    zip.GetRawEntries().Where(entry => entry.FullName == s.FolderPath).FirstOrDefault()?.ExtractToFile(savePath);
+                using (SevenZipExtractor extr = new SevenZipExtractor(Path))
+                    extr.ExtractFiles(savePath, s.FolderPath);
 
                 return true;
             }
@@ -87,6 +93,5 @@ namespace PackedFileSearcher.Searchers
                 return false;
             }
         }
-
     }
 }

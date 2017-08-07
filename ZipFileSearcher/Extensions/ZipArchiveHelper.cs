@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ZipFileSearcher
+namespace PackedFileSearcher
 {
     //
     // Workaround Entries Collection in ZipArchive

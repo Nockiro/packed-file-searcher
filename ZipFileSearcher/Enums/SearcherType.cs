@@ -1,11 +1,12 @@
 ﻿
-namespace ZipFileSearcher.Enums
+namespace PackedFileSearcher.Enums
 {
     // Attention! All types listet here _have_ to exist!
     public enum SearcherType 
     {
         None,
         ZipFile,
+        SevenZip
     }
 
     public static class SearcherTypeHelper
@@ -16,6 +17,8 @@ namespace ZipFileSearcher.Enums
             {
                 case ".zip":
                     return SearcherType.ZipFile;
+                case ".7z":
+                    return SearcherType.SevenZip;
                 default:
                     return SearcherType.None;
             }
