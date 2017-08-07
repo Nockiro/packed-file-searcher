@@ -53,8 +53,8 @@ namespace PackedFileSearcher.Searchers
 
             try
             {
-                SevenZipExtractor.SetLibraryPath("3rdParty" + System.IO.Path.DirectorySeparatorChar + "7z.dll");
-                var extr = new SevenZipExtractor(Path);
+                SevenZipBase.SetLibraryPath("3rdParty" + System.IO.Path.DirectorySeparatorChar + "7z.dll");
+                SevenZipExtractor extr = new SevenZipExtractor(Path);
 
                 foreach (ArchiveFileInfo entry in extr.ArchiveFileData)
                 {
@@ -83,6 +83,7 @@ namespace PackedFileSearcher.Searchers
         {
             try
             {
+                SevenZipBase.SetLibraryPath("3rdParty" + System.IO.Path.DirectorySeparatorChar + "7z.dll");
                 using (SevenZipExtractor extr = new SevenZipExtractor(Path))
                     extr.ExtractFiles(savePath, s.FolderPath);
 

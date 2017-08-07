@@ -117,7 +117,7 @@ namespace PackedFileSearcher
             this.btn_addFiles.Name = "btn_addFiles";
             this.btn_addFiles.Size = new System.Drawing.Size(87, 35);
             this.btn_addFiles.Text = "Add files..";
-            this.btn_addFiles.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
+            this.btn_addFiles.Click += new System.EventHandler(this.btn_addfile_Click);
             // 
             // btn_addFolder
             // 
