@@ -189,6 +189,7 @@ namespace ZipFileSearcher
         #endregion
 
 
+        #region visual effects
         #region search text field gui events
 
         private void tsm_searchText_KeyDown(object sender, KeyEventArgs e)
@@ -218,6 +219,18 @@ namespace ZipFileSearcher
         }
         #endregion
 
+        private void lv_results_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+            btn_copyPath.Enabled = btn_extract.Enabled = e.IsSelected;
+        }
+
+        private void lv_results_Leave(object sender, EventArgs e)
+        {
+            btn_copyPath.Enabled = btn_extract.Enabled = false;
+        }
+        #endregion
+
+        #region search and listing workers
         private void bw_loadFiles_DoWork(object sender, DoWorkEventArgs e)
         {
             // initialize error flag
@@ -308,6 +321,7 @@ namespace ZipFileSearcher
                 ListViewItem item = new ListViewItem(inst.PackagePath);
                 item.SubItems.Add(inst.FileName);
                 item.SubItems.Add(inst.FolderPath);
+                item.SubItems.Add(inst.EntryLength + " bytes");
                 item.Tag = inst;
 
                 lv_results.Items.Add(item);
@@ -317,6 +331,29 @@ namespace ZipFileSearcher
             btn_abort.Visible = false;
             requestedTimesOfCancellation = 0;
             tsm_searchText.Enabled = true;
+        }
+        #endregion
+
+        private void btn_extract_Click(object sender, EventArgs e)
+        {
+            using (SaveFileDialog sfd = new SaveFileDialog())
+            {
+                sfd.FileName = (lv_results.SelectedItems[0].Tag as SearchResultInstance).FileName;
+                sfd.ShowDialog();
+
+                if (sfd.FileName != "")
+                    (lv_results.SelectedItems[0].Tag as SearchResultInstance).SearcherInstance.extract(lv_results.SelectedItems[0].Tag as SearchResultInstance, sfd.FileName);
+            }
+        }
+
+        private void btn_copyPath_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText((lv_results.SelectedItems[0].Tag as SearchResultInstance).PackagePath + Path.DirectorySeparatorChar + (lv_results.SelectedItems[0].Tag as SearchResultInstance).FolderPath);
+        }
+
+        private void btn_deletefile_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

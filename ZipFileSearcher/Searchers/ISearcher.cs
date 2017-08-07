@@ -14,11 +14,12 @@ namespace ZipFileSearcher.Searchers
         List<SearchResultInstance> Search(string pattern);
 
         /// <summary>
-        /// Extracts a found file
+        /// Extracts a found entry
         /// </summary>
         /// <param name="s">Instance of the search result</param>
-        /// <returns></returns>
-        bool extractFile(SearchResultInstance s);
+        /// <param name="savePath">Path to be saved to</param>
+        /// <returns>true if successful</returns>
+        bool extract(SearchResultInstance s, string savePath);
 
         /// <summary>
         /// Used for setting the path if needed

@@ -124,6 +124,8 @@
     <None Include="ico\search_verysmall.png" />
     <None Include="ico\search_small.png" />
     <None Include="ico\search.png" />
+    <None Include="ico\extract.png" />
+    <None Include="ico\extract_col.png" />
     <Content Include="if_search_298865.ico" />
   </ItemGroup>
   <ItemGroup />

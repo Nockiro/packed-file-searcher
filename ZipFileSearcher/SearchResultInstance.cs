@@ -1,4 +1,6 @@
 ﻿
+using ZipFileSearcher.Searchers;
+
 namespace ZipFileSearcher
 {
     public class SearchResultInstance
@@ -19,15 +21,29 @@ namespace ZipFileSearcher
         public string FileName { get; }
 
         /// <summary>
+        /// Size of the unpacked entry in the archive
+        /// </summary>
+        public long EntryLength { get; }
+
+        /// <summary>
+        /// Searcher Instance
+        /// </summary>
+        public ISearcher SearcherInstance { get; }
+
+        /// <summary>
         /// Represents a search result
         /// </summary>
         /// <param name="path">Path to the original archive, eg. C:\test\test.zip</param>
         /// <param name="insidePath">Path inside the zip, eg. Backup\99AirBaloons.txt</param>
-        public SearchResultInstance(string path, string insidePath, string filename)
+        /// <param name="filename">File name</param>
+        /// <param name="entryLength">Size of the unpacked entry in the archive</param>
+        public SearchResultInstance(ISearcher si, string path, string insidePath, string filename, long entryLength)
         {
+            SearcherInstance = si;
             PackagePath = path;
             FolderPath = insidePath;
             FileName = filename;
+            EntryLength = entryLength;
         }
 
     }

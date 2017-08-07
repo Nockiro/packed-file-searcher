@@ -27,12 +27,22 @@ namespace ZipFileSearcher.Searchers
         {
         }
 
+        /// <summary>
+        /// Set the given path for this searcher instance
+        /// </summary>
+        /// <param name="path">Path to archive</param>
+        /// <returns>this</returns>
         public ISearcher WithPath(string path)
         {
             Path = path;
             return this;
         }
 
+        /// <summary>
+        /// Search in the given file for the given pattern
+        /// </summary>
+        /// <param name="pattern">String to be searched for</param>
+        /// <returns>List with search results of entries</returns>
         public List<SearchResultInstance> Search(string pattern)
         {
             List<SearchResultInstance> MatchingEntries = new List<SearchResultInstance>();
@@ -45,7 +55,7 @@ namespace ZipFileSearcher.Searchers
                     {
 
                         if (Regex.IsMatch(entry.Name, Utils.WildCardToRegular(pattern)))
-                            MatchingEntries.Add(new SearchResultInstance(Path, entry.FullName, entry.Name));
+                            MatchingEntries.Add(new SearchResultInstance(this, Path, entry.FullName, entry.Name, entry.Length));
                     }
 
             }
@@ -57,10 +67,25 @@ namespace ZipFileSearcher.Searchers
             return MatchingEntries;
         }
 
-        public bool extractFile(SearchResultInstance s)
+        /// <summary>
+        /// Extract a found entry
+        /// </summary>
+        /// <param name="s">Instance of the search result</param>
+        /// <param name="savePath">Path to be saved to</param>
+        /// <returns>True if successful</returns>
+        public bool extract(SearchResultInstance s, string savePath)
         {
-            //entry.ExtractToFile("myfile");
-            throw new NotImplementedException();
+            try
+            {
+                using (ZipArchive zip = ZipFile.Open(Path, ZipArchiveMode.Read))
+                    zip.GetRawEntries().Where(entry => entry.FullName == s.FolderPath).FirstOrDefault()?.ExtractToFile(savePath);
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
     }
