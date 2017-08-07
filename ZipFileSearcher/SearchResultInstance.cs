@@ -1,4 +1,5 @@
 ﻿
+using System;
 using ZipFileSearcher.Searchers;
 
 namespace ZipFileSearcher
@@ -31,19 +32,25 @@ namespace ZipFileSearcher
         public ISearcher SearcherInstance { get; }
 
         /// <summary>
+        /// Last time the file was written
+        /// </summary>
+        public DateTimeOffset LastWrite { get; }
+
+        /// <summary>
         /// Represents a search result
         /// </summary>
         /// <param name="path">Path to the original archive, eg. C:\test\test.zip</param>
         /// <param name="insidePath">Path inside the zip, eg. Backup\99AirBaloons.txt</param>
         /// <param name="filename">File name</param>
         /// <param name="entryLength">Size of the unpacked entry in the archive</param>
-        public SearchResultInstance(ISearcher si, string path, string insidePath, string filename, long entryLength)
+        public SearchResultInstance(ISearcher si, string path, string insidePath, string filename, long entryLength, DateTimeOffset lastWrite)
         {
             SearcherInstance = si;
             PackagePath = path;
             FolderPath = insidePath;
             FileName = filename;
             EntryLength = entryLength;
+            LastWrite = lastWrite;
         }
 
     }

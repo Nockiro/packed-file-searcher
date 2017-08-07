@@ -55,7 +55,7 @@ namespace ZipFileSearcher.Searchers
                     {
 
                         if (Regex.IsMatch(entry.Name, Utils.WildCardToRegular(pattern)))
-                            MatchingEntries.Add(new SearchResultInstance(this, Path, entry.FullName, entry.Name, entry.Length));
+                            MatchingEntries.Add(new SearchResultInstance(this, Path, entry.FullName, entry.Name, entry.Length, entry.LastWriteTime));
                     }
 
             }

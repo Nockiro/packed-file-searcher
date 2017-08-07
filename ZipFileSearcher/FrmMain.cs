@@ -322,6 +322,7 @@ namespace ZipFileSearcher
                 item.SubItems.Add(inst.FileName);
                 item.SubItems.Add(inst.FolderPath);
                 item.SubItems.Add(inst.EntryLength + " bytes");
+                item.SubItems.Add(inst.LastWrite.ToString());
                 item.Tag = inst;
 
                 lv_results.Items.Add(item);
@@ -336,24 +337,60 @@ namespace ZipFileSearcher
 
         private void btn_extract_Click(object sender, EventArgs e)
         {
-            using (SaveFileDialog sfd = new SaveFileDialog())
+            if (lv_results.SelectedItems.Count == 1)
             {
-                sfd.FileName = (lv_results.SelectedItems[0].Tag as SearchResultInstance).FileName;
-                sfd.ShowDialog();
+                using (SaveFileDialog sfd = new SaveFileDialog())
+                {
+                    sfd.FileName = (lv_results.SelectedItems[0].Tag as SearchResultInstance).FileName;
+                    sfd.ShowDialog();
 
-                if (sfd.FileName != "")
-                    (lv_results.SelectedItems[0].Tag as SearchResultInstance).SearcherInstance.extract(lv_results.SelectedItems[0].Tag as SearchResultInstance, sfd.FileName);
+                    if (sfd.FileName != "")
+                        (lv_results.SelectedItems[0].Tag as SearchResultInstance).SearcherInstance.extract(lv_results.SelectedItems[0].Tag as SearchResultInstance, sfd.FileName);
+                }
+            }
+            else if (lv_results.SelectedItems.Count > 1)
+            {
+                VistaFolderBrowserDialog fbd = new VistaFolderBrowserDialog();
+                fbd.Multiselect = false;
+                fbd.ShowDialog(this);
+
+                if (fbd.SelectedPath != "")
+                    foreach (ListViewItem item in lv_results.SelectedItems)
+                    {
+                        SearchResultInstance sri = (item.Tag as SearchResultInstance);
+                        
+                        sri.SearcherInstance.extract(sri,
+                            Utils.NextAvailableFilename(
+                                Properties.Settings.Default.UseWholePathForFileNames ?
+                                       (fbd.SelectedPath + Path.DirectorySeparatorChar + (Path.GetFileName(sri.PackagePath) + "_" + sri.FolderPath.Replace("/", "_").Replace(@"\", "_") + "_" + sri.FileName)) :
+                                       (fbd.SelectedPath + Path.DirectorySeparatorChar + sri.FileName)
+                            )
+                        );
+                    }
+
             }
         }
 
         private void btn_copyPath_Click(object sender, EventArgs e)
         {
-            Clipboard.SetText((lv_results.SelectedItems[0].Tag as SearchResultInstance).PackagePath + Path.DirectorySeparatorChar + (lv_results.SelectedItems[0].Tag as SearchResultInstance).FolderPath);
+            string textToBeCopied = "";
+
+            foreach (ListViewItem item in lv_results.SelectedItems)
+                textToBeCopied += (item.Tag as SearchResultInstance).PackagePath + Path.DirectorySeparatorChar + (item.Tag as SearchResultInstance).FolderPath + Environment.NewLine;
+
+            // remove last new line so that in case of only one line it's still pastable to an adress bar or smth like that
+            textToBeCopied.TrimEnd(Environment.NewLine.ToCharArray());
+
+            Clipboard.SetText(textToBeCopied, TextDataFormat.Text);
         }
 
         private void btn_deletefile_Click(object sender, EventArgs e)
         {
-
+            if (MessageBox.Show("Are you sure you want to *delete* all the selected packages?", "Sure?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                foreach (ListViewItem item in lv_results.SelectedItems)
+                    File.Delete((item.Tag as SearchResultInstance).PackagePath);
+            }
         }
     }
 }

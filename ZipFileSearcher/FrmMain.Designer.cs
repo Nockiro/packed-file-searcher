@@ -30,17 +30,17 @@ namespace ZipFileSearcher
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem(new string[] {
             "MyGoodZip.zip",
             "%:\\WholyFolder\\",
             "Zip"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem(new string[] {
             "TestZip2",
             "%:\\SomeOtherFolder\\"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem(new string[] {
             "rrrrr",
             "rrree"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem(new string[] {
             "rrrrr",
             "abcde"}, -1);
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
@@ -79,6 +79,7 @@ namespace ZipFileSearcher
             this.btn_abort = new System.Windows.Forms.ToolStripMenuItem();
             this.btn_copyPath = new System.Windows.Forms.ToolStripButton();
             this.chSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.toolStrip1.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tb_intro.SuspendLayout();
@@ -106,7 +107,7 @@ namespace ZipFileSearcher
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Padding = new System.Windows.Forms.Padding(4, 0, 1, 0);
             this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.toolStrip1.Size = new System.Drawing.Size(1376, 35);
+            this.toolStrip1.Size = new System.Drawing.Size(1388, 35);
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -138,7 +139,7 @@ namespace ZipFileSearcher
             this.tabControl.Location = new System.Drawing.Point(0, 60);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(1376, 479);
+            this.tabControl.Size = new System.Drawing.Size(1388, 479);
             this.tabControl.TabIndex = 1;
             // 
             // tb_intro
@@ -208,10 +209,10 @@ namespace ZipFileSearcher
             this.lv_files.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lv_files.FullRowSelect = true;
             this.lv_files.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2,
-            listViewItem3,
-            listViewItem4});
+            listViewItem9,
+            listViewItem10,
+            listViewItem11,
+            listViewItem12});
             this.lv_files.Location = new System.Drawing.Point(3, 3);
             this.lv_files.Name = "lv_files";
             this.lv_files.ShowGroups = false;
@@ -241,7 +242,7 @@ namespace ZipFileSearcher
             this.tb_results.Location = new System.Drawing.Point(4, 22);
             this.tb_results.Name = "tb_results";
             this.tb_results.Padding = new System.Windows.Forms.Padding(3);
-            this.tb_results.Size = new System.Drawing.Size(1368, 453);
+            this.tb_results.Size = new System.Drawing.Size(1380, 453);
             this.tb_results.TabIndex = 2;
             this.tb_results.Text = "Results";
             this.tb_results.UseVisualStyleBackColor = true;
@@ -252,13 +253,13 @@ namespace ZipFileSearcher
             this.chResultPath,
             this.chResultFileName,
             this.chResultRelativePath,
-            this.chSize});
+            this.chSize,
+            this.chTime});
             this.lv_results.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lv_results.FullRowSelect = true;
             this.lv_results.Location = new System.Drawing.Point(3, 3);
-            this.lv_results.MultiSelect = false;
             this.lv_results.Name = "lv_results";
-            this.lv_results.Size = new System.Drawing.Size(1362, 447);
+            this.lv_results.Size = new System.Drawing.Size(1374, 447);
             this.lv_results.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lv_results.TabIndex = 0;
             this.lv_results.UseCompatibleStateImageBehavior = false;
@@ -269,7 +270,7 @@ namespace ZipFileSearcher
             // chResultPath
             // 
             this.chResultPath.Text = "Path";
-            this.chResultPath.Width = 588;
+            this.chResultPath.Width = 493;
             // 
             // chResultFileName
             // 
@@ -291,7 +292,7 @@ namespace ZipFileSearcher
             this.toolStrip2.Name = "toolStrip2";
             this.toolStrip2.Padding = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.toolStrip2.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.toolStrip2.Size = new System.Drawing.Size(1376, 25);
+            this.toolStrip2.Size = new System.Drawing.Size(1388, 25);
             this.toolStrip2.TabIndex = 4;
             this.toolStrip2.Text = "toolStrip2";
             // 
@@ -322,7 +323,7 @@ namespace ZipFileSearcher
             this.statusStrip1.Location = new System.Drawing.Point(0, 539);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.statusStrip1.Size = new System.Drawing.Size(1376, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(1388, 22);
             this.statusStrip1.TabIndex = 5;
             // 
             // pb_status
@@ -430,13 +431,18 @@ namespace ZipFileSearcher
             // chSize
             // 
             this.chSize.Text = "Size of unpacked entry";
-            this.chSize.Width = 154;
+            this.chSize.Width = 126;
+            // 
+            // chTime
+            // 
+            this.chTime.Text = "Last write";
+            this.chTime.Width = 115;
             // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1376, 561);
+            this.ClientSize = new System.Drawing.Size(1388, 561);
             this.Controls.Add(this.tabControl);
             this.Controls.Add(this.toolStrip2);
             this.Controls.Add(this.toolStrip1);
@@ -496,6 +502,7 @@ namespace ZipFileSearcher
         private ToolStripButton btn_extract;
         private ToolStripButton btn_copyPath;
         private ColumnHeader chSize;
+        private ColumnHeader chTime;
     }
 }
 
