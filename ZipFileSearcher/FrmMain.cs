@@ -221,12 +221,12 @@ namespace ZipFileSearcher
 
         private void lv_results_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
-            btn_copyPath.Enabled = btn_extract.Enabled = e.IsSelected;
+            btn_copyPath.Enabled = btn_extract.Enabled = btn_deletefile.Enabled = e.IsSelected;
         }
 
         private void lv_results_Leave(object sender, EventArgs e)
         {
-            btn_copyPath.Enabled = btn_extract.Enabled = false;
+            btn_copyPath.Enabled = btn_extract.Enabled = btn_deletefile.Enabled = false;
         }
         #endregion
 
