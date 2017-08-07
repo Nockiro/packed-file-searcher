@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.IO.Compression;
@@ -295,9 +296,7 @@ namespace ZipFileSearcher
                 sri.AddRange(searcher.Search(tsm_searchText.Text));
 
                 if (bw_search.CancellationPending)
-                {
                     break;
-                }
 
                 if (searcher.Error)
                     this.InvokeIfRequired(() => setStatus("Warning! There seems to be a problem with " + searcher.Path, true, true, 0, true));
@@ -358,7 +357,7 @@ namespace ZipFileSearcher
                     foreach (ListViewItem item in lv_results.SelectedItems)
                     {
                         SearchResultInstance sri = (item.Tag as SearchResultInstance);
-                        
+
                         sri.SearcherInstance.extract(sri,
                             Utils.NextAvailableFilename(
                                 Properties.Settings.Default.UseWholePathForFileNames ?
@@ -391,6 +390,26 @@ namespace ZipFileSearcher
                 foreach (ListViewItem item in lv_results.SelectedItems)
                     File.Delete((item.Tag as SearchResultInstance).PackagePath);
             }
+        }
+
+        private void lv_results_DoubleClick(object sender, EventArgs e)
+        {
+            ListViewItem SelectedItem = lv_results.SelectedItems?[0];
+            try
+            {
+                Process.Start((SelectedItem?.Tag as SearchResultInstance).PackagePath);
+            }
+            catch { }
+        }
+
+        private void lv_files_DoubleClick(object sender, EventArgs e)
+        {
+            ListViewItem SelectedItem = lv_files.SelectedItems?[0];
+            try
+            {
+                Process.Start((SelectedItem?.Tag as ISearcher).Path);
+            }
+            catch { }
         }
     }
 }

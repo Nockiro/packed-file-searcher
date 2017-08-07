@@ -30,17 +30,17 @@ namespace ZipFileSearcher
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem13 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem(new string[] {
             "MyGoodZip.zip",
             "%:\\WholyFolder\\",
             "Zip"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem14 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem(new string[] {
             "TestZip2",
             "%:\\SomeOtherFolder\\"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem15 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem(new string[] {
             "rrrrr",
             "rrree"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem16 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem(new string[] {
             "rrrrr",
             "abcde"}, -1);
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
@@ -150,7 +150,7 @@ namespace ZipFileSearcher
             this.tb_intro.Location = new System.Drawing.Point(4, 22);
             this.tb_intro.Name = "tb_intro";
             this.tb_intro.Padding = new System.Windows.Forms.Padding(3);
-            this.tb_intro.Size = new System.Drawing.Size(1368, 453);
+            this.tb_intro.Size = new System.Drawing.Size(1380, 453);
             this.tb_intro.TabIndex = 0;
             this.tb_intro.Text = "Welcome!";
             this.tb_intro.UseVisualStyleBackColor = true;
@@ -171,11 +171,13 @@ namespace ZipFileSearcher
             this.tb_log.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.tb_log.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.tb_log.Location = new System.Drawing.Point(7, 115);
             this.tb_log.Multiline = true;
             this.tb_log.Name = "tb_log";
+            this.tb_log.ReadOnly = true;
             this.tb_log.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tb_log.Size = new System.Drawing.Size(1355, 332);
+            this.tb_log.Size = new System.Drawing.Size(1367, 332);
             this.tb_log.TabIndex = 1;
             // 
             // lbl_welcome
@@ -195,7 +197,7 @@ namespace ZipFileSearcher
             this.tb_files.Location = new System.Drawing.Point(4, 22);
             this.tb_files.Name = "tb_files";
             this.tb_files.Padding = new System.Windows.Forms.Padding(3);
-            this.tb_files.Size = new System.Drawing.Size(1368, 453);
+            this.tb_files.Size = new System.Drawing.Size(1380, 453);
             this.tb_files.TabIndex = 1;
             this.tb_files.Text = "Files";
             this.tb_files.UseVisualStyleBackColor = true;
@@ -209,17 +211,18 @@ namespace ZipFileSearcher
             this.lv_files.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lv_files.FullRowSelect = true;
             this.lv_files.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem13,
-            listViewItem14,
-            listViewItem15,
-            listViewItem16});
+            listViewItem9,
+            listViewItem10,
+            listViewItem11,
+            listViewItem12});
             this.lv_files.Location = new System.Drawing.Point(3, 3);
             this.lv_files.Name = "lv_files";
             this.lv_files.ShowGroups = false;
-            this.lv_files.Size = new System.Drawing.Size(1362, 447);
+            this.lv_files.Size = new System.Drawing.Size(1374, 447);
             this.lv_files.TabIndex = 3;
             this.lv_files.UseCompatibleStateImageBehavior = false;
             this.lv_files.View = System.Windows.Forms.View.Details;
+            this.lv_files.DoubleClick += new System.EventHandler(this.lv_files_DoubleClick);
             // 
             // chFile
             // 
@@ -265,6 +268,7 @@ namespace ZipFileSearcher
             this.lv_results.UseCompatibleStateImageBehavior = false;
             this.lv_results.View = System.Windows.Forms.View.Details;
             this.lv_results.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.lv_results_ItemSelectionChanged);
+            this.lv_results.DoubleClick += new System.EventHandler(this.lv_results_DoubleClick);
             this.lv_results.Leave += new System.EventHandler(this.lv_results_Leave);
             // 
             // chResultPath
@@ -280,7 +284,7 @@ namespace ZipFileSearcher
             // chResultRelativePath
             // 
             this.chResultRelativePath.Text = "Relative path in file";
-            this.chResultRelativePath.Width = 329;
+            this.chResultRelativePath.Width = 322;
             // 
             // toolStrip2
             // 
@@ -427,7 +431,7 @@ namespace ZipFileSearcher
             // chTime
             // 
             this.chTime.Text = "Last write";
-            this.chTime.Width = 115;
+            this.chTime.Width = 129;
             // 
             // btn_deletefile
             // 
