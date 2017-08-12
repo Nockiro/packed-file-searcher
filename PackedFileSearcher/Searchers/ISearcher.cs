@@ -10,8 +10,9 @@ namespace PackedFileSearcher.Searchers
         /// </summary>
         /// <param name="paths">Search path</param>
         /// <param name="pattern">Search string</param>
+        /// <param name="depth">Current depth of archive extraction</param>
         /// <returns>List of all SearchResults</returns>
-        List<SearchResultInstance> Search(string pattern);
+        List<SearchResultInstance> Search(string pattern, int depth = 0);
 
         /// <summary>
         /// Extracts a found entry

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PackedFileSearcher.Enums;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -43,8 +44,9 @@ namespace PackedFileSearcher.Searchers
         /// Search in the given file for the given pattern
         /// </summary>
         /// <param name="pattern">String to be searched for</param>
+        /// <param name="depth">Current recursion depth</param>
         /// <returns>List with search results of entries</returns>
-        public List<SearchResultInstance> Search(string pattern)
+        public List<SearchResultInstance> Search(string pattern, int depth = 0)
         {
             List<SearchResultInstance> MatchingEntries = new List<SearchResultInstance>();
 
@@ -54,15 +56,26 @@ namespace PackedFileSearcher.Searchers
 
                     foreach (ZipArchiveEntry entry in zip.GetRawEntries())
                     {
+                        Boolean isDir = false;
 
-                        if (Regex.IsMatch(entry.FullName, Utils.WildCardToRegular(pattern)))
-                        {
-                            Boolean isDir = false;
+                        if (entry.FullName.EndsWith("/") && entry.Name == "")
+                            isDir = true;
 
-                            if (entry.FullName.EndsWith("/") && entry.Name == "")
-                                isDir = true;
-
+                        // if either the file name matches the pattern or, if SearchInDirs is enabled, the path includes the pattern somewhere 
+                        if (Regex.IsMatch(entry.Name, Utils.WildCardToRegular(pattern)) || (isDir && Properties.Settings.Default.SearchInDirs && Regex.IsMatch(entry.FullName, Utils.WildCardToRegular(pattern))))
                             MatchingEntries.Add(new SearchResultInstance(this, Path, entry.FullName, entry.Name, (ulong)entry.Length, entry.LastWriteTime, isDir));
+
+                        // if the current entry is an archive, check if we have a searcher for it and search through it to the depth given in the settings
+                        if (Properties.Settings.Default.RecursiveArchiveDepth > 0 && SearcherTypeHelper.ExtensionToSearcherType(System.IO.Path.GetExtension(entry.Name)) != SearcherType.None)
+                        {
+                            string tempFileName = System.IO.Path.Combine(System.IO.Path.GetTempPath(), System.IO.Path.GetFileNameWithoutExtension(Path), entry.Name);
+                            Directory.CreateDirectory(System.IO.Path.GetDirectoryName(tempFileName));
+
+                            entry.ExtractToFile(tempFileName, true);
+                            ISearcher tempSearcher = Searcher.GetSearcher(SearcherTypeHelper.ExtensionToSearcherType(System.IO.Path.GetExtension(entry.Name)));
+
+                            foreach (SearchResultInstance si in tempSearcher.WithPath(tempFileName).Search(pattern, depth + 1))
+                                MatchingEntries.Add(si);
                         }
                     }
 

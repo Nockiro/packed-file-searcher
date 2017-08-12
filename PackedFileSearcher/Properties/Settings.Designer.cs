@@ -46,5 +46,17 @@ namespace PackedFileSearcher.Properties {
                 this["SearchInDirs"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public decimal RecursiveArchiveDepth {
+            get {
+                return ((decimal)(this["RecursiveArchiveDepth"]));
+            }
+            set {
+                this["RecursiveArchiveDepth"] = value;
+            }
+        }
     }
 }

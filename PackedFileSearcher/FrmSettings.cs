@@ -18,13 +18,19 @@ namespace PackedFileSearcher
 
             cb_useWholeFilePathForName.Checked = Properties.Settings.Default.UseWholePathForFileNames;
             cb_includeDirs.Checked = Properties.Settings.Default.SearchInDirs;
+            num_archiveDepth.Value = Properties.Settings.Default.RecursiveArchiveDepth;
         }
 
-        private void cb_useWholeFilePathForName_CheckedChanged(object sender, EventArgs e)=> Properties.Settings.Default.UseWholePathForFileNames = cb_useWholeFilePathForName.Checked;
+        private void FrmSettings_FormClosing(object sender, FormClosingEventArgs e) => Properties.Settings.Default.Save();
 
+        #region value change
+
+        private void cb_useWholeFilePathForName_CheckedChanged(object sender, EventArgs e) => Properties.Settings.Default.UseWholePathForFileNames = cb_useWholeFilePathForName.Checked;
 
         private void cb_includeDirs_Click(object sender, EventArgs e) => Properties.Settings.Default.SearchInDirs = cb_includeDirs.Checked;
 
-        ~FrmSettings() => Properties.Settings.Default.Save();
+        private void num_archiveDepth_ValueChanged(object sender, EventArgs e) => Properties.Settings.Default.RecursiveArchiveDepth = num_archiveDepth.Value;
+
+        #endregion
     }
 }

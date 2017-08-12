@@ -1,6 +1,8 @@
-﻿using SevenZip;
+﻿using PackedFileSearcher.Enums;
+using SevenZip;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -45,8 +47,9 @@ namespace PackedFileSearcher.Searchers
         /// Search in the given file for the given pattern
         /// </summary>
         /// <param name="pattern">String to be searched for</param>
+        /// <param name="depth">Current depth of archive extraction</param>
         /// <returns>List with search results of entries</returns>
-        public List<SearchResultInstance> Search(string pattern)
+        public List<SearchResultInstance> Search(string pattern, int depth = 0)
         {
             List<SearchResultInstance> MatchingEntries = new List<SearchResultInstance>();
 
@@ -59,8 +62,26 @@ namespace PackedFileSearcher.Searchers
                 foreach (ArchiveFileInfo entry in extr.ArchiveFileData)
                 {
 
-                    if (Regex.IsMatch(entry.FileName, Utils.WildCardToRegular(pattern)) && (!entry.IsDirectory || Properties.Settings.Default.SearchInDirs))
+                    // if either the file name matches the pattern or, if SearchInDirs is enabled, the path includes the pattern somewhere 
+                    if (Regex.IsMatch(System.IO.Path.GetFileName(entry.FileName), Utils.WildCardToRegular(pattern)) &&
+                        (!entry.IsDirectory || (entry.IsDirectory && Properties.Settings.Default.SearchInDirs && Regex.IsMatch(entry.FileName, Utils.WildCardToRegular(pattern)))))
                         MatchingEntries.Add(new SearchResultInstance(this, Path, entry.FileName, System.IO.Path.GetFileName(entry.FileName), entry.Size, entry.LastWriteTime, entry.IsDirectory));
+
+                    // if the current entry is an archive, check if we have a searcher for it and search through it to the depth given in the settings
+                    if (Properties.Settings.Default.RecursiveArchiveDepth > 0 && SearcherTypeHelper.ExtensionToSearcherType(System.IO.Path.GetExtension(entry.FileName)) != SearcherType.None)
+                        {
+                            string tempFileName = System.IO.Path.Combine(System.IO.Path.GetTempPath(), System.IO.Path.GetFileNameWithoutExtension(Path), entry.FileName);
+
+                            using (FileStream archiveStream = File.Create(tempFileName))
+                            {
+                                extr.ExtractFile(tempFileName, archiveStream);
+                                ISearcher tempSearcher = Searcher.GetSearcher(SearcherTypeHelper.ExtensionToSearcherType(System.IO.Path.GetExtension(entry.FileName)));
+
+                                foreach (SearchResultInstance si in tempSearcher.WithPath(tempFileName).Search(pattern, depth + 1))
+                                    MatchingEntries.Add(si);
+                            }
+
+                        }
                 }
 
 
@@ -85,7 +106,7 @@ namespace PackedFileSearcher.Searchers
             {
                 SevenZipBase.SetLibraryPath("3rdParty" + System.IO.Path.DirectorySeparatorChar + "7z.dll");
                 using (SevenZipExtractor extr = new SevenZipExtractor(Path))
-                        extr.ExtractFiles(savePath, s.FolderPath);
+                    extr.ExtractFiles(savePath, s.FolderPath);
 
                 return true;
             }
