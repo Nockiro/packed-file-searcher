@@ -31,11 +31,11 @@ namespace PackedFileSearcher
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
-            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
             "MyGoodZip.zip",
             "%:\\WholyFolder",
             "Zip"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
             "TestZip2",
             "%:\\SomeOtherFolder"}, -1);
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
@@ -69,6 +69,7 @@ namespace PackedFileSearcher
             this.btn_search = new System.Windows.Forms.ToolStripButton();
             this.tsm_searchText = new System.Windows.Forms.ToolStripTextBox();
             this.btn_settings = new System.Windows.Forms.ToolStripButton();
+            this.btn_clearResults = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.pb_status = new System.Windows.Forms.ToolStripProgressBar();
             this.lbl_status = new System.Windows.Forms.ToolStripStatusLabel();
@@ -143,8 +144,8 @@ namespace PackedFileSearcher
             this.lbl_caption.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.lbl_caption.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
             this.lbl_caption.Name = "lbl_caption";
-            this.lbl_caption.Size = new System.Drawing.Size(167, 32);
-            this.lbl_caption.Text = "Nockiro - Packed File Searcher";
+            this.lbl_caption.Size = new System.Drawing.Size(191, 32);
+            this.lbl_caption.Text = "Nockiro - Packed File Searcher v1.1";
             this.lbl_caption.Click += new System.EventHandler(this.lbl_caption_Click);
             // 
             // toolStripSeparator2
@@ -192,6 +193,7 @@ namespace PackedFileSearcher
             this.tabControl.SelectedIndex = 0;
             this.tabControl.Size = new System.Drawing.Size(1388, 479);
             this.tabControl.TabIndex = 1;
+            this.tabControl.SelectedIndexChanged += new System.EventHandler(this.tabControl_SelectedIndexChanged);
             // 
             // tb_intro
             // 
@@ -262,8 +264,8 @@ namespace PackedFileSearcher
             this.lv_files.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lv_files.FullRowSelect = true;
             this.lv_files.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem5,
-            listViewItem6});
+            listViewItem1,
+            listViewItem2});
             this.lv_files.Location = new System.Drawing.Point(3, 3);
             this.lv_files.Name = "lv_files";
             this.lv_files.ShowGroups = false;
@@ -351,7 +353,8 @@ namespace PackedFileSearcher
             this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btn_search,
             this.tsm_searchText,
-            this.btn_settings});
+            this.btn_settings,
+            this.btn_clearResults});
             this.toolStrip2.Location = new System.Drawing.Point(0, 35);
             this.toolStrip2.Name = "toolStrip2";
             this.toolStrip2.Padding = new System.Windows.Forms.Padding(5, 0, 3, 0);
@@ -397,6 +400,17 @@ namespace PackedFileSearcher
             this.btn_settings.Size = new System.Drawing.Size(77, 22);
             this.btn_settings.Text = "Settings";
             this.btn_settings.Click += new System.EventHandler(this.btn_settings_Click);
+            // 
+            // btn_clearResults
+            // 
+            this.btn_clearResults.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.btn_clearResults.Image = global::PackedFileSearcher.Properties.Resources.clear;
+            this.btn_clearResults.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btn_clearResults.Margin = new System.Windows.Forms.Padding(0, 1, 4, 2);
+            this.btn_clearResults.Name = "btn_clearResults";
+            this.btn_clearResults.Size = new System.Drawing.Size(91, 22);
+            this.btn_clearResults.Text = "Clear results";
+            this.btn_clearResults.Click += new System.EventHandler(this.btn_clearResults_Click);
             // 
             // statusStrip1
             // 
@@ -515,6 +529,7 @@ namespace PackedFileSearcher
         private ToolStripButton btn_deletefile;
         private ToolStripButton btn_removeFiles;
         private ToolStripButton btn_settings;
+        private ToolStripButton btn_clearResults;
     }
 }
 

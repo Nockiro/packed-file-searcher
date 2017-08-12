@@ -283,6 +283,8 @@ namespace PackedFileSearcher
                     }
                 }
         }
+
+        private void btn_clearResults_Click(object sender, EventArgs e) => lv_results.Items.Clear();
         #endregion
         #endregion
 
@@ -316,15 +318,11 @@ namespace PackedFileSearcher
         }
         #endregion
 
-        private void lv_results_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
-        {
-            btn_copyPath.Enabled = btn_extract.Enabled = btn_deletefile.Enabled = e.IsSelected;
-        }
+        private void lv_results_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e) => btn_copyPath.Enabled = btn_extract.Enabled = btn_deletefile.Enabled = e.IsSelected;
 
-        private void lv_results_Leave(object sender, EventArgs e)
-        {
-            btn_copyPath.Enabled = btn_extract.Enabled = btn_deletefile.Enabled = false;
-        }
+        private void lv_results_Leave(object sender, EventArgs e) => btn_copyPath.Enabled = btn_extract.Enabled = btn_deletefile.Enabled = false;
+
+        private void tabControl_SelectedIndexChanged(object sender, EventArgs e) => btn_clearResults.Enabled = tabControl.SelectedIndex == 2;
         #endregion
 
         #region other listview events (double click, ..)

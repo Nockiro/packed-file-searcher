@@ -136,6 +136,7 @@
     <None Include="ico\plus_2.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ico\clear.png" />
     <None Include="ico\settings_verysmall.png" />
     <None Include="ico\settings_small.png" />
     <None Include="ico\settings.png" />
