@@ -322,7 +322,7 @@ namespace PackedFileSearcher
             // 
             // chResultFileName
             // 
-            this.chResultFileName.Text = "File name";
+            this.chResultFileName.Text = "Dir/File name";
             this.chResultFileName.Width = 233;
             // 
             // chResultRelativePath

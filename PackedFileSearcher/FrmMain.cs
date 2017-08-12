@@ -536,6 +536,12 @@ namespace PackedFileSearcher
                 ListViewItem item = new ListViewItem(inst.PackagePath);
                 item.SubItems.Add(inst.FileName);
                 item.SubItems.Add(inst.FolderPath);
+                if (inst.IsDir)
+                {
+                    // if an entry is a directory, highlight it with a very bright light green
+                    item.SubItems[1].BackColor = Color.FromArgb(0, 242, 255, 253);
+                    item.UseItemStyleForSubItems = false;
+                }
                 item.SubItems.Add(inst.EntryLength + " bytes");
                 item.SubItems.Add(inst.LastWrite.ToString());
                 item.Tag = inst;
