@@ -25,7 +25,13 @@ namespace PackedFileSearcher
             StringSearch
         }
 
-        public const string SearchHint = "Search for.. (Use * and ?)";
+        enum ReadingStatus
+        {
+            OK,
+            CancelRequest,
+            Error
+        }
+        public const string SearchHint = "Search for.. (Use * [≙ any text] and ? [≙ a single character] as wildcards)";
         public const string DefaultStatusText = "Ready.";
 
         private WorkingState CurrentWorkingState = WorkingState.None;
@@ -105,13 +111,80 @@ namespace PackedFileSearcher
 
             return item;
         }
+
+        /// <summary>
+        /// Searches for compatible archives in the given directory
+        /// </summary>
+        /// <param name="path">path to the directory</param>
+        /// <returns>Reading Status: Status code whether the search threw an error or if a cancellation request was made</returns>
+        private ReadingStatus addDirectoryToSearchList(string path)
+        {
+            // if the directory doesn't exist, it's not a big problem so we can continue with whatever we want to.
+            if (!Directory.Exists(path))
+                return ReadingStatus.OK;
+
+            CurrentWorkingState = WorkingState.DirectorySearch;
+            this.InvokeIfRequired(() => setStatus($"Listing files in directories.. { path }", true, true, 0, true));
+
+            // Get all matching compressed files we can get in the given directory
+            (Boolean errorOccured, List<string> results) search = Utils.SearchDirectory(path);
+            string[] files = search.results.ToArray();
+
+            CurrentWorkingState = WorkingState.FileScan;
+            this.InvokeIfRequired(() => setStatus("Read files in directories.. ", true, true, 0, true));
+
+            // Loop through each file ..
+            ReadingStatus fileReadingStatus = addFilesToSearchList(files);
+
+            // if the search threw an error, return that.
+            if (search.errorOccured)
+                return ReadingStatus.Error;
+            else
+                return fileReadingStatus;
+        }
+
+        /// <summary>
+        /// Checks the given files if they are compatible archive types and adds them
+        /// </summary>
+        /// <param name="files">files to add</param>
+        /// <returns>Reading Status: Status code whether the search threw an error or if a cancellation request was made</returns>
+        private ReadingStatus addFilesToSearchList(params string[] files)
+        {
+            List<ListViewItem> filesToAdd = new List<ListViewItem>();
+
+            foreach (string f in files)
+            {
+                // if we have a cancellation request and the worker is still working, we grant it
+                if (bw_loadFiles.IsBusy && bw_loadFiles.CancellationPending)
+                {
+                    // Get all by now processed items and add them all at once - addrange is a lot faster than adding them seperately
+                    this.InvokeIfRequired(() => lv_files.Items.AddRange(filesToAdd.ToArray()));
+
+                    // report a cancellation request
+                    return ReadingStatus.CancelRequest;
+                }
+
+                // .. if we have a searcher for the file, we process it - otherwise, we don't
+                if (SearcherTypeHelper.ExtensionToSearcherType(Path.GetExtension(f)) != SearcherType.None)
+                {
+                    this.InvokeIfRequired(() => setStatus($"Read files.. Valid: { f }", true, true));
+
+                    // Process file path into a new listviewitem and add it to list of "items to be added"
+                    filesToAdd.Add(processFilePath(f));
+                }
+            }
+
+            // Get all by now processed items and add them all at once - addrange is a lot faster than adding them seperately
+            this.InvokeIfRequired(() => lv_files.Items.AddRange(filesToAdd.ToArray()));
+            return ReadingStatus.OK;
+        }
         #endregion
 
-        #region button actions
+        #region button actions (+ Drop event)
         #region toolbar
         private void btn_extract_Click(object sender, EventArgs e)
         {
-
+            // if there is more than one file, don't just save them and make the user choosing a folder to extract the multiple files to
             if (lv_results.SelectedItems.Count > 1 || lv_results.SelectedItems.Cast<ListViewItem>().Where(it => (it.Tag as SearchResultInstance).IsDir).Any())
             {
                 VistaFolderBrowserDialog fbd = new VistaFolderBrowserDialog();
@@ -150,6 +223,7 @@ namespace PackedFileSearcher
         {
             string textToBeCopied = "";
 
+            // copy each file in a seperate line in the clipboard
             foreach (ListViewItem item in lv_results.SelectedItems)
                 textToBeCopied += (item.Tag as SearchResultInstance).PackagePath + Path.DirectorySeparatorChar + (item.Tag as SearchResultInstance).FolderPath + Environment.NewLine;
 
@@ -163,7 +237,6 @@ namespace PackedFileSearcher
         {
             if (MessageBox.Show("Are you sure you want to *delete* all the selected packages?", "Sure?", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-
                 foreach (ListViewItem item in lv_results.SelectedItems)
                 {
                     File.Delete((item.Tag as SearchResultInstance).PackagePath);
@@ -189,16 +262,11 @@ namespace PackedFileSearcher
 
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
-                    setStatus("Read files.. ", true, true, 0, true);
-                    foreach (var f in ofd.FileNames)
-                    {
-                        setStatus("Read files.. " + f, true, true, 0, true);
-                        // Process file path into a new listviewitem and add it
-                        lv_files.Items.Add(processFilePath(f));
-                    }
-                    setStatus(DefaultStatusText, true);
+                    this.InvokeIfRequired(() => setStatus("Read files.. ", true, true, 0, true));
+                    addFilesToSearchList(ofd.FileNames);
                 }
             }
+            this.InvokeIfRequired(() => setStatus(DefaultStatusText, true));
         }
 
         private void btn_addFolder_Click(object sender, EventArgs e)
@@ -286,6 +354,25 @@ namespace PackedFileSearcher
 
         private void btn_clearResults_Click(object sender, EventArgs e) => lv_results.Items.Clear();
         #endregion
+
+        private void FrmMain_DragDrop(object sender, DragEventArgs e)
+        {
+            // start this in a background thread as especially the directory deep search could take a while
+            new System.Threading.Thread(() =>
+            {
+                this.InvokeIfRequired(() => setStatus("Read files.. ", true, true, 0, true));
+
+                foreach (string s in (string[])e.Data.GetData(DataFormats.FileDrop))
+                {
+                    if (Utils.isDirectory(s))
+                        addDirectoryToSearchList(s);
+                    else
+                        addFilesToSearchList(s);
+                }
+
+                this.InvokeIfRequired(() => setStatus(DefaultStatusText, true));
+            }).Start();
+        }
         #endregion
 
         #region visual effects
@@ -323,6 +410,17 @@ namespace PackedFileSearcher
         private void lv_results_Leave(object sender, EventArgs e) => btn_copyPath.Enabled = btn_extract.Enabled = btn_deletefile.Enabled = false;
 
         private void tabControl_SelectedIndexChanged(object sender, EventArgs e) => btn_clearResults.Enabled = tabControl.SelectedIndex == 2;
+
+        private void FrmMain_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Copy;
+
+                if (tabControl.SelectedIndex != 1)
+                    tabControl.SelectTab(1);
+            }
+        }
         #endregion
 
         #region other listview events (double click, ..)
@@ -367,42 +465,17 @@ namespace PackedFileSearcher
             // Loop through all selected directories
             foreach (string path in ((VistaFolderBrowserDialog)e.Argument).SelectedPaths)
             {
-                if (!Directory.Exists(path))
-                    continue;
-
-                CurrentWorkingState = WorkingState.DirectorySearch;
-                this.InvokeIfRequired(() => setStatus($"Listing files in directories.. { path }", true, true, 0, true));
-
-                // Get all matching compressed files we can get in the given directory
-                (Boolean errorOccured, List<string> results) search = Utils.SearchDirectory(path);
-                string[] files = search.results.ToArray();
-
-                CurrentWorkingState = WorkingState.FileScan;
-                this.InvokeIfRequired(() => setStatus("Read files in directories.. ", true, true, 0, true));
-
-                // Loop through each file ..
-                foreach (string file in files)
+                switch (addDirectoryToSearchList(path))
                 {
-                    // if we have a cancellation request, we grant it
-                    if (bw_loadFiles.CancellationPending)
-                    {
+                    case ReadingStatus.OK:
+                        continue;
+                    case ReadingStatus.CancelRequest:
                         e.Cancel = true;
                         return;
-                    }
-
-                    // .. if we have a searcher for the file, we process it - otherwise, we don't
-                    if (SearcherTypeHelper.ExtensionToSearcherType(Path.GetExtension(file)) != SearcherType.None)
-                    {
-                        this.InvokeIfRequired(() => setStatus($"Read files in directories.. Valid: { file }", true, true));
-                        this.InvokeIfRequired(() => lv_files.Items.Add(processFilePath(file)));
-                    }
+                    case ReadingStatus.Error:
+                        this.InvokeIfRequired(() => setStatus("Warning! There seems to be a problem with " + path, true, true, 0, true));
+                        break;
                 }
-
-                // if the search threw an error, set our flag and write a warning into the output channel
-                errorOccured = search.errorOccured || errorOccured;
-
-                if (search.errorOccured)
-                    this.InvokeIfRequired(() => setStatus("Warning! There seems to be a problem with " + path, true, true, 0, true));
             }
 
             if (errorOccured)
@@ -478,5 +551,6 @@ namespace PackedFileSearcher
             tsm_searchText.Enabled = true;
         }
         #endregion
+
     }
 }

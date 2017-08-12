@@ -6,6 +6,15 @@ using System.Text.RegularExpressions;
 
 public static class Utils
 {
+    public static Boolean isDirectory(string path)
+    {
+        // get the file attributes for file or directory
+        FileAttributes attr = File.GetAttributes(path);
+
+        //detect whether its a directory or file
+        return attr.HasFlag(FileAttributes.Directory);
+    }
+
     public static IEnumerable<T> GetValues<T>()
     {
         return Enum.GetValues(typeof(T)).Cast<T>();
@@ -55,10 +64,12 @@ public static class Utils
 
     private static string numberPattern = " ({0})";
 
-    public static string NextAvailableFilename(string path)
+    public static string NextAvailableFilename(string path, bool dir = false)
     {
+        if (dir)
+            path = Path.Combine(Path.GetDirectoryName(path), Path.GetFileNameWithoutExtension(path));
         // Short-cut if already available
-        if (!File.Exists(path))
+        if ((!dir && !File.Exists(path)) || (dir && !Directory.Exists(path)))
             return path;
 
         // If path has extension then insert the number pattern just before the extension and return next filename
@@ -69,18 +80,18 @@ public static class Utils
         return GetNextFilename(path + numberPattern);
     }
 
-    private static string GetNextFilename(string pattern)
+    private static string GetNextFilename(string pattern, bool dir = false)
     {
         string tmp = string.Format(pattern, 1);
         if (tmp == pattern)
             throw new ArgumentException("The pattern must include an index place-holder", "pattern");
 
-        if (!File.Exists(tmp))
+        if ((!dir && !File.Exists(tmp)) || (dir && !Directory.Exists(tmp)))
             return tmp; // short-circuit if no matches
 
         int min = 1, max = 2; // min is inclusive, max is exclusive/untested
 
-        while (File.Exists(string.Format(pattern, max)))
+        while (dir ? Directory.Exists(string.Format(pattern, max)) : File.Exists(string.Format(pattern, max)))
         {
             min = max;
             max *= 2;
@@ -89,10 +100,20 @@ public static class Utils
         while (max != min + 1)
         {
             int pivot = (max + min) / 2;
-            if (File.Exists(string.Format(pattern, pivot)))
-                min = pivot;
+            if (dir)
+            {
+                if (Directory.Exists(string.Format(pattern, pivot)))
+                    min = pivot;
+                else
+                    max = pivot;
+            }
             else
-                max = pivot;
+            {
+                if (File.Exists(string.Format(pattern, pivot)))
+                    min = pivot;
+                else
+                    max = pivot;
+            }
         }
 
         return string.Format(pattern, max);

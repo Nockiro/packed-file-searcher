@@ -68,7 +68,7 @@ namespace PackedFileSearcher.Searchers
                         // if the current entry is an archive, check if we have a searcher for it and search through it to the depth given in the settings
                         if (Properties.Settings.Default.RecursiveArchiveDepth > 0 && SearcherTypeHelper.ExtensionToSearcherType(System.IO.Path.GetExtension(entry.Name)) != SearcherType.None)
                         {
-                            string tempFileName = System.IO.Path.Combine(System.IO.Path.GetTempPath(), System.IO.Path.GetFileNameWithoutExtension(Path), entry.Name);
+                            string tempFileName = System.IO.Path.Combine(Program.tempPath, System.IO.Path.GetFileNameWithoutExtension(Utils.NextAvailableFilename(Path, true)), entry.Name);
                             Directory.CreateDirectory(System.IO.Path.GetDirectoryName(tempFileName));
 
                             entry.ExtractToFile(tempFileName, true);

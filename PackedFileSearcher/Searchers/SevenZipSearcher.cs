@@ -69,19 +69,19 @@ namespace PackedFileSearcher.Searchers
 
                     // if the current entry is an archive, check if we have a searcher for it and search through it to the depth given in the settings
                     if (Properties.Settings.Default.RecursiveArchiveDepth > 0 && SearcherTypeHelper.ExtensionToSearcherType(System.IO.Path.GetExtension(entry.FileName)) != SearcherType.None)
+                    {
+                        string tempFileName = System.IO.Path.Combine(Program.tempPath, System.IO.Path.GetFileNameWithoutExtension(Utils.NextAvailableFilename(Path, true)), entry.FileName);
+
+                        using (FileStream archiveStream = File.Create(tempFileName))
                         {
-                            string tempFileName = System.IO.Path.Combine(System.IO.Path.GetTempPath(), System.IO.Path.GetFileNameWithoutExtension(Path), entry.FileName);
+                            extr.ExtractFile(tempFileName, archiveStream);
+                            ISearcher tempSearcher = Searcher.GetSearcher(SearcherTypeHelper.ExtensionToSearcherType(System.IO.Path.GetExtension(entry.FileName)));
 
-                            using (FileStream archiveStream = File.Create(tempFileName))
-                            {
-                                extr.ExtractFile(tempFileName, archiveStream);
-                                ISearcher tempSearcher = Searcher.GetSearcher(SearcherTypeHelper.ExtensionToSearcherType(System.IO.Path.GetExtension(entry.FileName)));
-
-                                foreach (SearchResultInstance si in tempSearcher.WithPath(tempFileName).Search(pattern, depth + 1))
-                                    MatchingEntries.Add(si);
-                            }
-
+                            foreach (SearchResultInstance si in tempSearcher.WithPath(tempFileName).Search(pattern, depth + 1))
+                                MatchingEntries.Add(si);
                         }
+
+                    }
                 }
 
 
@@ -106,7 +106,18 @@ namespace PackedFileSearcher.Searchers
             {
                 SevenZipBase.SetLibraryPath("3rdParty" + System.IO.Path.DirectorySeparatorChar + "7z.dll");
                 using (SevenZipExtractor extr = new SevenZipExtractor(Path))
-                    extr.ExtractFiles(savePath, s.FolderPath);
+                    if (s.IsDir)
+                    {
+                        extr.ExtractFiles(savePath, extr.ArchiveFileData.Where(archiveFileInfo => archiveFileInfo.FileName.StartsWith(s.FolderPath)).Select(t => t.Index).ToArray());
+
+                    }
+                    else
+                    {
+                        using (FileStream fs = new FileStream(savePath, FileMode.Create))  //replace empty string with desired destination
+                        {
+                            extr.ExtractFile(s.FolderPath, fs);
+                        }
+                    }
 
                 return true;
             }

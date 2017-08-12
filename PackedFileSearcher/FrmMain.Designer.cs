@@ -31,13 +31,6 @@ namespace PackedFileSearcher
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
-            "MyGoodZip.zip",
-            "%:\\WholyFolder",
-            "Zip"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
-            "TestZip2",
-            "%:\\SomeOtherFolder"}, -1);
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btn_addFiles = new System.Windows.Forms.ToolStripMenuItem();
             this.btn_addFolder = new System.Windows.Forms.ToolStripMenuItem();
@@ -103,7 +96,7 @@ namespace PackedFileSearcher
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Padding = new System.Windows.Forms.Padding(4, 0, 1, 0);
             this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.toolStrip1.Size = new System.Drawing.Size(1388, 35);
+            this.toolStrip1.Size = new System.Drawing.Size(1275, 35);
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -145,7 +138,7 @@ namespace PackedFileSearcher
             this.lbl_caption.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
             this.lbl_caption.Name = "lbl_caption";
             this.lbl_caption.Size = new System.Drawing.Size(191, 32);
-            this.lbl_caption.Text = "Nockiro - Packed File Searcher v1.1";
+            this.lbl_caption.Text = "Nockiro - Packed File Searcher v1.2";
             this.lbl_caption.Click += new System.EventHandler(this.lbl_caption_Click);
             // 
             // toolStripSeparator2
@@ -191,7 +184,7 @@ namespace PackedFileSearcher
             this.tabControl.Location = new System.Drawing.Point(0, 60);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(1388, 479);
+            this.tabControl.Size = new System.Drawing.Size(1275, 479);
             this.tabControl.TabIndex = 1;
             this.tabControl.SelectedIndexChanged += new System.EventHandler(this.tabControl_SelectedIndexChanged);
             // 
@@ -203,7 +196,7 @@ namespace PackedFileSearcher
             this.tb_intro.Location = new System.Drawing.Point(4, 22);
             this.tb_intro.Name = "tb_intro";
             this.tb_intro.Padding = new System.Windows.Forms.Padding(3);
-            this.tb_intro.Size = new System.Drawing.Size(1380, 453);
+            this.tb_intro.Size = new System.Drawing.Size(1267, 453);
             this.tb_intro.TabIndex = 0;
             this.tb_intro.Text = "Welcome!";
             this.tb_intro.UseVisualStyleBackColor = true;
@@ -230,19 +223,22 @@ namespace PackedFileSearcher
             this.tb_log.Name = "tb_log";
             this.tb_log.ReadOnly = true;
             this.tb_log.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tb_log.Size = new System.Drawing.Size(1367, 332);
+            this.tb_log.Size = new System.Drawing.Size(1254, 332);
             this.tb_log.TabIndex = 1;
             // 
             // lbl_welcome
             // 
-            this.lbl_welcome.AutoSize = true;
+            this.lbl_welcome.Dock = System.Windows.Forms.DockStyle.Top;
             this.lbl_welcome.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_welcome.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.lbl_welcome.Location = new System.Drawing.Point(534, 36);
+            this.lbl_welcome.Location = new System.Drawing.Point(3, 3);
             this.lbl_welcome.Name = "lbl_welcome";
-            this.lbl_welcome.Size = new System.Drawing.Size(357, 21);
+            this.lbl_welcome.Padding = new System.Windows.Forms.Padding(0, 16, 0, 0);
+            this.lbl_welcome.Size = new System.Drawing.Size(1261, 88);
             this.lbl_welcome.TabIndex = 0;
-            this.lbl_welcome.Text = "Hi! Feel free to add files to be searched trough!";
+            this.lbl_welcome.Text = "Hi! Add files to be searched through by dropping them here or choose them with th" +
+    "e button \"Add files/folder..\"";
+            this.lbl_welcome.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // tb_files
             // 
@@ -250,7 +246,7 @@ namespace PackedFileSearcher
             this.tb_files.Location = new System.Drawing.Point(4, 22);
             this.tb_files.Name = "tb_files";
             this.tb_files.Padding = new System.Windows.Forms.Padding(3);
-            this.tb_files.Size = new System.Drawing.Size(1380, 453);
+            this.tb_files.Size = new System.Drawing.Size(1267, 453);
             this.tb_files.TabIndex = 1;
             this.tb_files.Text = "Files";
             this.tb_files.UseVisualStyleBackColor = true;
@@ -263,13 +259,10 @@ namespace PackedFileSearcher
             this.chType});
             this.lv_files.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lv_files.FullRowSelect = true;
-            this.lv_files.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2});
             this.lv_files.Location = new System.Drawing.Point(3, 3);
             this.lv_files.Name = "lv_files";
             this.lv_files.ShowGroups = false;
-            this.lv_files.Size = new System.Drawing.Size(1374, 447);
+            this.lv_files.Size = new System.Drawing.Size(1261, 447);
             this.lv_files.TabIndex = 3;
             this.lv_files.UseCompatibleStateImageBehavior = false;
             this.lv_files.View = System.Windows.Forms.View.Details;
@@ -283,7 +276,7 @@ namespace PackedFileSearcher
             // chPath
             // 
             this.chPath.Text = "Path";
-            this.chPath.Width = 903;
+            this.chPath.Width = 807;
             // 
             // chType
             // 
@@ -296,7 +289,7 @@ namespace PackedFileSearcher
             this.tb_results.Location = new System.Drawing.Point(4, 22);
             this.tb_results.Name = "tb_results";
             this.tb_results.Padding = new System.Windows.Forms.Padding(3);
-            this.tb_results.Size = new System.Drawing.Size(1380, 453);
+            this.tb_results.Size = new System.Drawing.Size(1267, 453);
             this.tb_results.TabIndex = 2;
             this.tb_results.Text = "Results";
             this.tb_results.UseVisualStyleBackColor = true;
@@ -313,7 +306,7 @@ namespace PackedFileSearcher
             this.lv_results.FullRowSelect = true;
             this.lv_results.Location = new System.Drawing.Point(3, 3);
             this.lv_results.Name = "lv_results";
-            this.lv_results.Size = new System.Drawing.Size(1374, 447);
+            this.lv_results.Size = new System.Drawing.Size(1261, 447);
             this.lv_results.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lv_results.TabIndex = 0;
             this.lv_results.UseCompatibleStateImageBehavior = false;
@@ -325,12 +318,12 @@ namespace PackedFileSearcher
             // chResultPath
             // 
             this.chResultPath.Text = "Path";
-            this.chResultPath.Width = 493;
+            this.chResultPath.Width = 433;
             // 
             // chResultFileName
             // 
             this.chResultFileName.Text = "File name";
-            this.chResultFileName.Width = 285;
+            this.chResultFileName.Width = 233;
             // 
             // chResultRelativePath
             // 
@@ -359,7 +352,7 @@ namespace PackedFileSearcher
             this.toolStrip2.Name = "toolStrip2";
             this.toolStrip2.Padding = new System.Windows.Forms.Padding(5, 0, 3, 0);
             this.toolStrip2.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.toolStrip2.Size = new System.Drawing.Size(1388, 25);
+            this.toolStrip2.Size = new System.Drawing.Size(1275, 25);
             this.toolStrip2.TabIndex = 4;
             this.toolStrip2.Text = "toolStrip2";
             // 
@@ -385,7 +378,7 @@ namespace PackedFileSearcher
             this.tsm_searchText.Name = "tsm_searchText";
             this.tsm_searchText.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
             this.tsm_searchText.Size = new System.Drawing.Size(500, 25);
-            this.tsm_searchText.Text = "Search for.. (Use * and ?)";
+            this.tsm_searchText.Text = "Search for.. (Use * [≙ any text] and ? [≙ a single character] as wildcards)";
             this.tsm_searchText.Enter += new System.EventHandler(this.tsm_searchText_Enter);
             this.tsm_searchText.Leave += new System.EventHandler(this.tsm_searchText_Leave);
             this.tsm_searchText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tsm_searchText_KeyDown);
@@ -422,7 +415,7 @@ namespace PackedFileSearcher
             this.statusStrip1.Location = new System.Drawing.Point(0, 539);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.statusStrip1.Size = new System.Drawing.Size(1388, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(1275, 22);
             this.statusStrip1.TabIndex = 5;
             // 
             // pb_status
@@ -465,9 +458,10 @@ namespace PackedFileSearcher
             // 
             // FrmMain
             // 
+            this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1388, 561);
+            this.ClientSize = new System.Drawing.Size(1275, 561);
             this.Controls.Add(this.tabControl);
             this.Controls.Add(this.toolStrip2);
             this.Controls.Add(this.toolStrip1);
@@ -475,6 +469,8 @@ namespace PackedFileSearcher
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FrmMain";
             this.Text = "Packed File Searcher";
+            this.DragDrop += new System.Windows.Forms.DragEventHandler(this.FrmMain_DragDrop);
+            this.DragEnter += new System.Windows.Forms.DragEventHandler(this.FrmMain_DragEnter);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.tabControl.ResumeLayout(false);
