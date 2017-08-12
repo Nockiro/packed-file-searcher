@@ -549,6 +549,9 @@ namespace PackedFileSearcher
             btn_abort.Visible = false;
             requestedTimesOfCancellation = 0;
             tsm_searchText.Enabled = true;
+
+            if (tabControl.SelectedIndex != 2)
+                tabControl.SelectTab(2);
         }
         #endregion
 
