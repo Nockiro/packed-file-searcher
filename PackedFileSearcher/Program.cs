@@ -24,7 +24,7 @@ namespace PackedFileSearcher
                 Console.SetOut(consoleWriter);
 
                 // Initialize SevenZip
-                SevenZipBase.SetLibraryPath(Path.Combine(Environment.CurrentDirectory, "3rdParty", "7z.dll"));
+                SevenZipBase.SetLibraryPath(Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "3rdParty", "7z.dll"));
 
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
