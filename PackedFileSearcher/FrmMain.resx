@@ -150,7 +150,7 @@
     <value>191, 32</value>
   </data>
   <data name="lbl_caption.Text" xml:space="preserve">
-    <value>Nockiro - Packed File Searcher v1.2</value>
+    <value>Nockiro - Packed File Searcher v1.3</value>
   </data>
   <data name="toolStripSeparator2.Size" type="System.Drawing.Size, System.Drawing">
     <value>6, 35</value>
@@ -375,7 +375,7 @@
     <value>3, 3</value>
   </data>
   <data name="lv_files.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1261, 447</value>
+    <value>1201, 447</value>
   </data>
   <data name="lv_files.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
@@ -399,7 +399,7 @@
     <value>3, 3, 3, 3</value>
   </data>
   <data name="tb_files.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1267, 453</value>
+    <value>1207, 453</value>
   </data>
   <data name="tb_files.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -456,7 +456,7 @@
     <value>3, 3</value>
   </data>
   <data name="lv_results.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1261, 447</value>
+    <value>1201, 447</value>
   </data>
   <data name="lv_results.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -480,7 +480,7 @@
     <value>3, 3, 3, 3</value>
   </data>
   <data name="tb_results.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1267, 453</value>
+    <value>1207, 453</value>
   </data>
   <data name="tb_results.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -6821,9 +6821,6 @@
         AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
         AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
 </value>
-  </data>
-  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
     <value>Packed File Searcher</value>
