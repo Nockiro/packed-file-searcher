@@ -1,8 +1,10 @@
 ﻿
+using System.IO;
+
 namespace PackedFileSearcher.Enums
 {
     // Attention! All types listet here _have_ to exist!
-    public enum SearcherType 
+    public enum SearcherType
     {
         None,
         ZipFile,
@@ -11,26 +13,31 @@ namespace PackedFileSearcher.Enums
 
     public static class SearcherTypeHelper
     {
-        public static SearcherType ExtensionToSearcherType(string ext)
+        public static SearcherType GetSearcherFromPath(string filepath)
         {
-            switch (ext)
+            // for standard zip files, use the faster and more lightweight zip file searcher
+            if (System.IO.Path.GetExtension(filepath) == ".zip")
+                return SearcherType.ZipFile;
+
+            try
             {
-                case ".zip":
-                    return SearcherType.ZipFile;
-                case ".7z":
-                case ".bz":
-                case ".bz2":
-                case ".gz":
-                case ".xz":
-                case ".tar":
-                case ".wim":
-                case ".rar":
-                case ".sfx":
-                case ".lzh":
-                case ".iso":
+                // if this method doesn't throw an exception, the file extension is valid
+                SevenZip.Formats.FormatByFileName(filepath, true);
+                return SearcherType.SevenZip;
+            }
+            catch (System.ArgumentException)
+            {
+                // if we couldn't get a result from the extension, try the file signature
+                try
+                {
+                    new SevenZip.SevenZipExtractor(File.OpenRead(filepath));
+
                     return SearcherType.SevenZip;
-                default:
+                }
+                catch
+                {
                     return SearcherType.None;
+                }
             }
         }
     }

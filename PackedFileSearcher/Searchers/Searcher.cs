@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using PackedFileSearcher.Enums;
 
 namespace PackedFileSearcher.Searchers
@@ -13,22 +8,17 @@ namespace PackedFileSearcher.Searchers
     {
 
         public static String ExtensionText
-        {
-            get
-            {
-                return Utils.GetValues<SearcherType>().Select(t => GetSearcher(t).ExtensionText).Aggregate((i, j) => i + "|" + j);
-            }
-        }
+            => Utils.GetValues<SearcherType>().Select(t => GetSearcher(t).ExtensionText).Aggregate((i, j) => i + "|" + j);
 
         public static ISearcher GetSearcher(SearcherType type)
         {
             switch (type)
             {
-                case SearcherType.SevenZip:
-                    return new SevenZipSearcher();
                 case SearcherType.ZipFile:
-                default:
                     return new ZipFileSearcher();
+                case SearcherType.SevenZip:
+                default: // if there hasn't been a decision of which searcher to use, try sevenzip anyway
+                    return new SevenZipSearcher();
             }
         }
     }

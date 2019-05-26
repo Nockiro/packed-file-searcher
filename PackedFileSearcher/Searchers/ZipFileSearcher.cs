@@ -66,13 +66,13 @@ namespace PackedFileSearcher.Searchers
                             MatchingEntries.Add(new SearchResultInstance(this, Path, entry.FullName, entry.Name, (ulong)entry.Length, entry.LastWriteTime, isDir));
 
                         // if the current entry is an archive, check if we have a searcher for it and search through it to the depth given in the settings
-                        if (Properties.Settings.Default.RecursiveArchiveDepth > 0 && SearcherTypeHelper.ExtensionToSearcherType(System.IO.Path.GetExtension(entry.Name)) != SearcherType.None)
+                        if (Properties.Settings.Default.RecursiveArchiveDepth > 0 && SearcherTypeHelper.GetSearcherFromPath(entry.Name) != SearcherType.None)
                         {
                             string tempFileName = System.IO.Path.Combine(Program.tempPath, System.IO.Path.GetFileNameWithoutExtension(Utils.NextAvailableFilename(Path, true)), entry.Name);
                             Directory.CreateDirectory(System.IO.Path.GetDirectoryName(tempFileName));
 
                             entry.ExtractToFile(tempFileName, true);
-                            ISearcher tempSearcher = Searcher.GetSearcher(SearcherTypeHelper.ExtensionToSearcherType(System.IO.Path.GetExtension(entry.Name)));
+                            ISearcher tempSearcher = Searcher.GetSearcher(SearcherTypeHelper.GetSearcherFromPath(entry.Name));
 
                             foreach (SearchResultInstance si in tempSearcher.WithPath(tempFileName).Search(pattern, depth + 1))
                                 MatchingEntries.Add(si);

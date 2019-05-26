@@ -5,10 +5,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using PackedFileSearcher.Enums;
 using PackedFileSearcher.Searchers;
@@ -107,7 +104,7 @@ namespace PackedFileSearcher
             item.SubItems.Add(Path.GetExtension(filePath));
 
             // Set the object to the list item as we could need it later to extract files or show further information
-            item.Tag = Searcher.GetSearcher(SearcherTypeHelper.ExtensionToSearcherType(Path.GetExtension(filePath))).WithPath(filePath);
+            item.Tag = Searcher.GetSearcher(SearcherTypeHelper.GetSearcherFromPath(filePath)).WithPath(filePath);
 
             return item;
         }
@@ -165,7 +162,7 @@ namespace PackedFileSearcher
                 }
 
                 // .. if we have a searcher for the file, we process it - otherwise, we don't
-                if (SearcherTypeHelper.ExtensionToSearcherType(Path.GetExtension(f)) != SearcherType.None)
+                if (SearcherTypeHelper.GetSearcherFromPath(f) != SearcherType.None)
                 {
                     this.InvokeIfRequired(() => setStatus($"Read files.. Valid: { f }", true, true));
 

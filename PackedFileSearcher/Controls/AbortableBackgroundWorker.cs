@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
+﻿using System.ComponentModel;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace PackedFileSearcher
 {
     public class AbortableBackgroundWorker : BackgroundWorker
     {
-
-
         private Thread workerThread;
 
         protected override void OnDoWork(DoWorkEventArgs e)

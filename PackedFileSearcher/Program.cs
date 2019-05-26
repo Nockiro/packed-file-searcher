@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SevenZip;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,6 +22,10 @@ namespace PackedFileSearcher
             using (consoleWriter = new ConsoleWriter())
             {
                 Console.SetOut(consoleWriter);
+
+                // Initialize SevenZip
+                SevenZipBase.SetLibraryPath(Path.Combine(Environment.CurrentDirectory, "3rdParty", "7z.dll"));
+
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
                 Application.Run(new FrmMain());
